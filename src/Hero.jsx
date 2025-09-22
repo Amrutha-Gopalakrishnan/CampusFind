@@ -2,7 +2,7 @@ import React from 'react'
 import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Search, ClipboardList, Shield, CheckCircle } from 'lucide-react';
-import logo from './assets/logo.png';
+import logo from './assets/Logo.png';
 
 const Hero = () => {
   return (
