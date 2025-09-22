@@ -1,156 +1,10 @@
-// import React, { useState, useEffect } from "react";
-// import { supabase } from "./supabaseClient";
-
-// export default function ReportLostBelonging({ user, setUser }) {
-//   const [authUser, setAuthUser] = useState(user || null);
-//   const [formData, setFormData] = useState({
-//     description: "",
-//     identity: "",
-//     name: "",
-//     deptShift: "",
-//     regNo: "",
-//     place: "",
-//     date: "",
-//     time: "",
-//     status: "Pending",
-//     agree: false,
-//     handover: false,
-//   });
-//   const [file, setFile] = useState(null); // File object
-//   const [imageUrl, setImageUrl] = useState(""); // Supabase public URL
-//   const [uploading, setUploading] = useState(false);
-
-//   useEffect(() => {
-//     setAuthUser(user || null);
-//   }, [user]);
-
-//   useEffect(() => {
-//     const syncUser = async () => {
-//       const { data } = await supabase.auth.getUser();
-//       if (data?.user) setAuthUser(data.user);
-//     };
-//     syncUser();
-//     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-//       setAuthUser(session?.user || null);
-//     });
-//     return () => sub.subscription.unsubscribe();
-//   }, []);
-
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: type === "checkbox" ? checked : value,
-//     });
-//   };
-
-//   // Handle file upload and preview
-//   const handleFileChange = async (e) => {
-//     const selected = e.target.files && e.target.files[0];
-//     if (!selected) return;
-//     if (!authUser?.id) {
-//       alert("You must be logged in to upload an image.");
-//       return;
-//     }
-//     setUploading(true);
-//     // Remove previous image if exists
-//     if (imageUrl) {
-//       await deleteImageFromSupabase(imageUrl);
-//       setImageUrl("");
-//       setFile(null);
-//     }
-//     setFile(selected);
-
-//     // Upload to Supabase
-//     const fileName = `${authUser.id}_${Date.now()}_${selected.name}`;
-//     const { error: uploadError } = await supabase.storage
-//       .from("lost-found-images")
-//       .upload(fileName, selected, { upsert: false });
-//     if (uploadError) {
-//       setUploading(false);
-//       return alert(uploadError.message);
-//     }
-//     const { data: publicUrlData } = supabase.storage
-//       .from("lost-found-images")
-//       .getPublicUrl(fileName);
-//     setImageUrl(publicUrlData?.publicUrl || "");
-//     setUploading(false);
-//   };
-
-//   // Delete image from Supabase Storage
-//   const deleteImageFromSupabase = async (url) => {
-//     try {
-//       // Extract file name from URL
-//       const parts = url.split("/");
-//       const fileName = parts
-//         .slice(parts.indexOf("lost-found-images") + 1)
-//         .join("/");
-//       await supabase.storage.from("lost-found-images").remove([fileName]);
-//     } catch (err) {
-//       // Ignore errors for now
-//     }
-//   };
-
-//   // Handle re-upload (delete and reset)
-//   const handleReupload = async () => {
-//     if (imageUrl) {
-//       await deleteImageFromSupabase(imageUrl);
-//     }
-//     setImageUrl("");
-//     setFile(null);
-//     // Reset file input value
-//     document.getElementById("fileUpload").value = "";
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!formData.agree) return alert("You must agree to the Terms of Service.");
-//     const currentUserId = authUser?.id || user?.id;
-//     if (!currentUserId) return alert("You must be logged in to submit.");
-
-//     let finalImageUrl = imageUrl || null;
-
-//     const { error: insertError } = await supabase.from("lost_items").insert([
-//       {
-//         ...formData,
-//         user_id: currentUserId,
-//         image_url: finalImageUrl,
-//       },
-//     ]);
-//     if (insertError) return alert(insertError.message);
-
-//     alert("Lost item reported successfully!");
-//     setFormData({
-//       description: "",
-//       identity: "",
-//       name: "",
-//       deptShift: "",
-//       regNo: "",
-//       place: "",
-//       date: "",
-//       time: "",
-//       status: "Pending",
-//       agree: false,
-//       handover: false,
-//     });
-//     setFile(null);
-//     setImageUrl("");
-//     document.getElementById("fileUpload").value = "";
-//   };
-
-//   const handleSignOut = async () => {
-//     await supabase.auth.signOut();
-//     if (typeof setUser === "function") setUser(null);
-//   };
-
-
 import React, { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 
 export default function ReportLostBelonging({ user, setUser }) {
   const [authUser, setAuthUser] = useState(user || null);
   const [formData, setFormData] = useState({
-    description: "",
+    description: "",   // Title input (textarea)
     identity: "",
     name: "",
     deptShift: "",
@@ -193,49 +47,47 @@ export default function ReportLostBelonging({ user, setUser }) {
   };
 
   // File upload
+  const handleFileChange = async (e) => {
+    const selected = e.target.files && e.target.files[0];
+    if (!selected) return;
+    if (!authUser?.id) {
+      alert("You must be logged in to upload an image.");
+      return;
+    }
 
-const handleFileChange = async (e) => {
-  const selected = e.target.files && e.target.files[0];
-  if (!selected) return;
-  if (!authUser?.id) {
-    alert("You must be logged in to upload an image.");
-    return;
-  }
+    setUploading(true);
 
-  setUploading(true);
+    // Remove old image if any
+    if (imageUrl) {
+      await deleteImageFromSupabase(imageUrl);
+      setImageUrl("");
+      setFile(null);
+    }
 
-  // Remove old image if any
-  if (imageUrl) {
-    await deleteImageFromSupabase(imageUrl);
-    setImageUrl("");
-    setFile(null);
-  }
+    setFile(selected);
 
-  setFile(selected);
+    // Unique file path
+    const fileName = `${authUser.id}_${Date.now()}_${selected.name}`;
 
-  // Unique file path
-  const fileName = `${authUser.id}_${Date.now()}_${selected.name}`;
+    // Upload file to Supabase Storage
+    const { error: uploadError } = await supabase.storage
+      .from("lost-found-images")
+      .upload(fileName, selected, { upsert: true });
 
-  // Upload file to Supabase Storage
-  const { error: uploadError } = await supabase.storage
-    .from("lost-found-images")
-    .upload(fileName, selected, { upsert: true });
+    if (uploadError) {
+      setUploading(false);
+      console.error("Upload error:", uploadError);
+      return alert(uploadError.message);
+    }
 
-  if (uploadError) {
+    // Get public URL after upload (you can store either the URL or just fileName)
+    const { data: publicUrlData } = supabase.storage
+      .from("lost-found-images")
+      .getPublicUrl(fileName);
+
+    setImageUrl(publicUrlData.publicUrl);
     setUploading(false);
-    console.error("Upload error:", uploadError);
-    return alert(uploadError.message);
-  }
-
-  // ✅ Get public URL after upload
-  const { data: publicUrlData } = supabase.storage
-    .from("lost-found-images")
-    .getPublicUrl(fileName);
-
-  setImageUrl(publicUrlData.publicUrl);
-  setUploading(false);
-};
-
+  };
 
   const deleteImageFromSupabase = async (url) => {
     try {
@@ -259,21 +111,22 @@ const handleFileChange = async (e) => {
     if (!formData.agree) return alert("You must agree to the Terms of Service.");
 
     const currentUserId = authUser?.id || user?.id;
+    const currentUserEmail = authUser?.email || user?.email;
+
     if (!currentUserId) return alert("You must be logged in to submit.");
 
     const { error: insertError } = await supabase.from("lost_items").insert([
       {
-        description: formData.description,
-        identity: formData.identity,
+        description: formData.description,      // Title input stored here
         name: formData.name,
-        department: formData.deptShift, // mapped
-        register_number: formData.regNo, // mapped
+        department: formData.deptShift,
+        register_number: formData.regNo,
         place: formData.place,
         date: formData.date || null,
         time: formData.time || null,
         status: formData.status,
         image_url: imageUrl || null,
-       
+        owner_email: currentUserEmail || null,  // Store owner email per schema
       },
     ]);
 
@@ -283,6 +136,7 @@ const handleFileChange = async (e) => {
     }
 
     alert("Lost item reported successfully!");
+
     setFormData({
       description: "",
       identity: "",
@@ -295,7 +149,6 @@ const handleFileChange = async (e) => {
       status: "Pending",
       agree: false,
       handover: false,
-     
     });
     setFile(null);
     setImageUrl("");
@@ -372,7 +225,7 @@ const handleFileChange = async (e) => {
           )}
         </div>
 
-        {/* Description */}
+        {/* Description (Title) */}
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Title <span className="text-red-500">*</span>
         </label>
@@ -550,7 +403,7 @@ const handleFileChange = async (e) => {
             href="mailto:support@belongify.ac.in"
             className="text-[#15735b] font-medium"
           >
-            support@belongify.ac.in
+            campusfindsrcas@gmail.com
           </a>{" "}
           or visit the Lost & Found office in the Student Services Building.
         </p>
@@ -558,4 +411,3 @@ const handleFileChange = async (e) => {
     </div>
   );
 }
-

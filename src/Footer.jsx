@@ -10,10 +10,11 @@ export default function Footer() {
         <div className='flex gap-4'>
           <a href='/home' className='hover:text-[#15735b]'>Home</a>
           <a href='/dashboard' className='hover:text-[#15735b]'>Dashboard</a>
-          <a href='mailto:support@campusfind.ac.in' className='hover:text-[#15735b]'>Support</a>
+          <a href='mailto:campusfindsrcas@gmail.com' className='hover:text-[#15735b]'>Support</a>
         </div>
       </div>
     </footer>
   )
 }
+
 
