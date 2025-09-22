@@ -3,11 +3,9 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  plugins: [react(),
+  plugins: [
+    react(),
     tailwindcss(),
   ],
-  esbuild: {
-    // Treat "use client" as harmless instead of failing
-    supported: {
-      'directive': true,}}
+  // ❌ remove the invalid esbuild.supported config completely
 })
