@@ -9,5 +9,5 @@ export default defineConfig({
   esbuild: {
     // Treat "use client" as harmless instead of failing
     supported: {
-      'directive': true,}
+      'directive': true,}}
 })
