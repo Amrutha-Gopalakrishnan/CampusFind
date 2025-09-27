@@ -1,6 +1,6 @@
 import { Home, Search, ClipboardList, User } from "lucide-react";
 import React from 'react'
-import logo from './assets/logo.png'
+import logo from './assets/Logo.png'
 export default function Sidebar({ active, onNavigate }) {
   return (
     <div className="w-60 bg-white h-screen shadow-md flex flex-col justify-between">
