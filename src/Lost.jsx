@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
+import { Upload, Camera, User, Phone, Building, Hash, MapPin, Calendar, Clock, CheckCircle, AlertCircle, LogOut, ArrowRight } from "lucide-react";
+import { useAlert, CustomAlert } from "./CustomAlert";
 
 export default function ReportLostBelonging({ user, setUser }) {
+  const { alert, success, error, warning, info, hideAlert } = useAlert();
   const [authUser, setAuthUser] = useState(user || null);
   const [formData, setFormData] = useState({
-    description: "",   // Title input (textarea)
-    identity: "",
+    title: "",
+    description: "",
     name: "",
+    phone: "",
     deptShift: "",
     regNo: "",
     place: "",
@@ -20,9 +24,7 @@ export default function ReportLostBelonging({ user, setUser }) {
   const [imageUrl, setImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    setAuthUser(user || null);
-  }, [user]);
+  useEffect(() => setAuthUser(user || null), [user]);
 
   useEffect(() => {
     const syncUser = async () => {
@@ -40,24 +42,16 @@ export default function ReportLostBelonging({ user, setUser }) {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
-  // File upload
   const handleFileChange = async (e) => {
-    const selected = e.target.files && e.target.files[0];
+    const selected = e.target.files?.[0];
     if (!selected) return;
-    if (!authUser?.id) {
-      alert("You must be logged in to upload an image.");
-      return;
-    }
+    if (!authUser?.id) return error("You must be logged in to upload an image.", 'Authentication Required');
 
     setUploading(true);
 
-    // Remove old image if any
     if (imageUrl) {
       await deleteImageFromSupabase(imageUrl);
       setImageUrl("");
@@ -65,11 +59,8 @@ export default function ReportLostBelonging({ user, setUser }) {
     }
 
     setFile(selected);
-
-    // Unique file path
     const fileName = `${authUser.id}_${Date.now()}_${selected.name}`;
 
-    // Upload file to Supabase Storage
     const { error: uploadError } = await supabase.storage
       .from("lost-found-images")
       .upload(fileName, selected, { upsert: true });
@@ -77,10 +68,9 @@ export default function ReportLostBelonging({ user, setUser }) {
     if (uploadError) {
       setUploading(false);
       console.error("Upload error:", uploadError);
-      return alert(uploadError.message);
+      return error(uploadError.message, 'Upload Failed');
     }
 
-    // Get public URL after upload (you can store either the URL or just fileName)
     const { data: publicUrlData } = supabase.storage
       .from("lost-found-images")
       .getPublicUrl(fileName);
@@ -108,17 +98,18 @@ export default function ReportLostBelonging({ user, setUser }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.agree) return alert("You must agree to the Terms of Service.");
+    if (!formData.agree) return error("You must agree to the Terms of Service.", 'Agreement Required');
 
     const currentUserId = authUser?.id || user?.id;
-    const currentUserEmail = authUser?.email || user?.email;
-
-    if (!currentUserId) return alert("You must be logged in to submit.");
+    const ownerEmail = authUser?.email || user?.email;
+    if (!currentUserId || !ownerEmail) return error("You must be logged in to submit.", 'Authentication Required');
 
     const { error: insertError } = await supabase.from("lost_items").insert([
       {
-        description: formData.description,      // Title input stored here
+        title: formData.title,
+        description: formData.description,
         name: formData.name,
+        phone_number: formData.phone,
         department: formData.deptShift,
         register_number: formData.regNo,
         place: formData.place,
@@ -126,21 +117,21 @@ export default function ReportLostBelonging({ user, setUser }) {
         time: formData.time || null,
         status: formData.status,
         image_url: imageUrl || null,
-        owner_email: currentUserEmail || null,  // Store owner email per schema
+        owner_email: ownerEmail,
       },
     ]);
 
     if (insertError) {
       console.error("Insert error:", insertError);
-      return alert(insertError.message);
+      return error(insertError.message, 'Submission Failed');
     }
 
-    alert("Lost item reported successfully!");
-
+    success("Lost item reported successfully!", 'Success');
     setFormData({
+      title: "",
       description: "",
-      identity: "",
       name: "",
+      phone: "",
       deptShift: "",
       regNo: "",
       place: "",
@@ -161,248 +152,295 @@ export default function ReportLostBelonging({ user, setUser }) {
   };
 
   return (
-    <div className="flex-1 bg-gray-50 p-8">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Report Lost Belonging
-          </h2>
-          <p className="text-sm text-gray-600">
-            Share details so the user can share the information quickly.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-purple-50/20 p-6 lg:p-8">
+      {/* Custom Alert Component */}
+      <CustomAlert
+        show={alert.show}
+        type={alert.type}
+        title={alert.title}
+        message={alert.message}
+        duration={alert.duration}
+        onClose={hideAlert}
+      />
+      
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-6">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg">
+            <AlertCircle className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-black text-gray-900">Report Lost Item</h2>
+            <p className="text-gray-600 font-medium">Share details to help locate your lost item quickly</p>
+          </div>
         </div>
         <button
           onClick={handleSignOut}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
         >
+          <LogOut className="w-4 h-4" />
           Sign Out
         </button>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded-xl shadow p-6 space-y-4"
-      >
-        {/* Upload Image */}
-        <div className="border-2 border-dashed border-gray-300 p-6 rounded-lg flex flex-col items-center justify-center mb-6">
-          <div className="w-20 h-20 bg-[#e6f3ef] flex items-center justify-center rounded-lg overflow-hidden">
-            {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt="Uploaded"
-                className="object-contain w-full h-full"
-              />
-            ) : (
-              <span className="text-[#15735b] font-semibold">Image</span>
+      {/* Form */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Image Upload */}
+          <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 flex flex-col items-center justify-center bg-gray-50/50">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mb-4 overflow-hidden">
+              {imageUrl ? (
+                <img src={imageUrl} alt="Uploaded" className="object-cover w-full h-full rounded-2xl" />
+              ) : (
+                <Camera className="w-8 h-8 text-gray-400" />
+              )}
+            </div>
+            <input
+              id="fileUpload"
+              type="file"
+              className="hidden"
+              accept="image/*"
+              onChange={handleFileChange}
+              disabled={!!imageUrl || uploading}
+            />
+            {!imageUrl && (
+              <label
+                htmlFor="fileUpload"
+                className={`px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer flex items-center gap-2 ${
+                  uploading ? "opacity-50 pointer-events-none" : ""
+                }`}
+              >
+                <Upload className="w-5 h-5" />
+                {uploading ? "Uploading..." : "Choose Image"}
+              </label>
+            )}
+            {imageUrl && (
+              <button
+                type="button"
+                className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                onClick={handleReupload}
+              >
+                <Camera className="w-5 h-5" />
+                Reupload
+              </button>
             )}
           </div>
-          <input
-            id="fileUpload"
-            type="file"
-            className="hidden"
-            accept="image/*"
-            onChange={handleFileChange}
-            disabled={!!imageUrl || uploading}
-          />
-          {!imageUrl && (
-            <label
-              htmlFor="fileUpload"
-              className={`mt-3 px-4 py-2 bg-[#15735b] text-white rounded-md hover:bg-[#125e4b] cursor-pointer ${
-                uploading ? "opacity-50 pointer-events-none" : ""
-              }`}
-            >
-              {uploading ? "Uploading..." : "Choose File"}
+
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">
+              Item Title <span className="text-red-500">*</span>
             </label>
-          )}
-          {imageUrl && (
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              placeholder="e.g. Wallet, ID Card, Laptop Bag"
+              required
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">
+              Detailed Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              placeholder="Provide a detailed description of the item you lost..."
+              rows="4"
+              required
+            />
+          </div>
+
+          {/* Personal Information */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <User className="w-4 h-4 inline mr-1" />
+                Your Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                placeholder="Enter your full name"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <Phone className="w-4 h-4 inline mr-1" />
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                placeholder="+91 9876543210"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <Building className="w-4 h-4 inline mr-1" />
+                Department & Year
+              </label>
+              <input
+                type="text"
+                name="deptShift"
+                value={formData.deptShift}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                placeholder="e.g. CSE 3rd Year"
+              />
+            </div>
+          </div>
+
+          {/* Additional Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <Hash className="w-4 h-4 inline mr-1" />
+                Register Number
+              </label>
+              <input
+                type="text"
+                name="regNo"
+                value={formData.regNo}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                placeholder="Enter your register number"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <MapPin className="w-4 h-4 inline mr-1" />
+                Where Lost
+              </label>
+              <input
+                type="text"
+                name="place"
+                value={formData.place}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                placeholder="e.g. Library, Canteen, Room 101"
+              />
+            </div>
+          </div>
+
+          {/* Date, Time & Status */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <Calendar className="w-4 h-4 inline mr-1" />
+                Date Lost
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <Clock className="w-4 h-4 inline mr-1" />
+                Time Lost
+              </label>
+              <input
+                type="time"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                <CheckCircle className="w-4 h-4 inline mr-1" />
+                Status
+              </label>
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+              >
+                <option>Pending</option>
+                <option>Found</option>
+                <option>Claimed</option>
+                <option>Lost</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Agreements */}
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                name="agree"
+                checked={formData.agree}
+                onChange={handleChange}
+                className="mt-1 h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                required
+              />
+              <span className="text-sm text-gray-600">
+                I confirm that all the information provided is accurate and I agree to the Terms of Service and Privacy Policy
+              </span>
+            </div>
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                name="handover"
+                checked={formData.handover}
+                onChange={handleChange}
+                className="mt-1 h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-600">
+                Handover the item to the Office after submitting this form
+              </span>
+            </div>
+          </div>
+
+          {/* Submit Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-6">
             <button
               type="button"
-              className="mt-3 px-4 py-2 bg-[#1e40af] text-white rounded-md hover:bg-[#1e3a8a] transition-colors"
-              onClick={handleReupload}
+              onClick={() => setFormData({ ...formData, title: "", description: "" })}
+              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:border-gray-400 hover:bg-gray-50 transition-all duration-300"
             >
-              Reupload
+              Clear Form
             </button>
-          )}
-        </div>
-
-        {/* Description (Title) */}
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Title <span className="text-red-500">*</span>
-        </label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          className="w-full border rounded-lg p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-[#15735b]"
-          placeholder="Provide a detailed description of the item you lost..."
-          rows="3"
-          required
-        />
-
-        {/* Identity */}
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          Any specific Identity / Evidence
-        </label>
-        <input
-          type="text"
-          name="identity"
-          value={formData.identity}
-          onChange={handleChange}
-          className="w-full border rounded-lg p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-[#15735b]"
-          placeholder="Any unique identifiers or marks on the item..."
-        />
-
-        {/* Posted By */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="text-sm font-medium text-gray-700">Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-2"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Department & Shift
-            </label>
-            <input
-              type="text"
-              name="deptShift"
-              value={formData.deptShift}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-2"
-            />
-          </div>
-        </div>
-
-        {/* Contact Info */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Register Number
-            </label>
-            <input
-              type="text"
-              name="regNo"
-              value={formData.regNo}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#15735b]"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Precise Place Lost
-            </label>
-            <input
-              type="text"
-              name="place"
-              value={formData.place}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#15735b]"
-              placeholder="e.g. Library, Canteen, Room 101"
-            />
-          </div>
-        </div>
-
-        {/* When & Where */}
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div>
-            <label className="text-sm font-medium text-gray-700">Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#15735b]"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-700">Time</label>
-            <input
-              type="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#15735b]"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-700">Status</label>
-            <select
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#15735b]"
+            <button
+              type="submit"
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
             >
-              <option>Pending</option>
-              <option>Found</option>
-              <option>Claimed</option>
-              <option>Lost</option>
-            </select>
+              Submit Lost Report
+              <ArrowRight className="w-5 h-5" />
+            </button>
           </div>
-        </div>
-
-        {/* Agreement */}
-        <div className="flex items-center gap-2 mb-6">
-          <input
-            type="checkbox"
-            name="agree"
-            checked={formData.agree}
-            onChange={handleChange}
-            className="h-4 w-4"
-          />
-          <span className="text-sm text-gray-600">
-            I confirm that all the information provided is accurate and I agree
-            to the Terms of Service and Privacy Policy
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 mb-6">
-          <input
-            type="checkbox"
-            name="handover"
-            checked={formData.handover}
-            onChange={handleChange}
-            className="h-4 w-4"
-          />
-          <span className="text-sm text-gray-600">
-            Handover the item to the Office after submitting this form
-          </span>
-        </div>
-
-        {/* Buttons */}
-        <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={() =>
-              setFormData({ ...formData, description: "", identity: "" })
-            }
-            className="px-4 py-2 border rounded-md"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-[#15735b] text-white rounded-md hover:bg-[#125e4b]"
-          >
-            Submit Lost Report
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
 
       {/* Help Section */}
-      <div className="bg-[#e6f3ef] border border-[#c8e6dc] rounded-lg p-4 mt-6">
-        <h3 className="font-medium text-[#15735b] mb-1">Need Help?</h3>
-        <p className="text-sm text-gray-600">
-          If you have any questions or need assistance with your found item
-          report, please contact our support team at{" "}
-          <a
-            href="mailto:support@belongify.ac.in"
-            className="text-[#15735b] font-medium"
-          >
+      <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-200/50">
+        <h3 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+          <AlertCircle className="w-5 h-5" />
+          Need Help?
+        </h3>
+        <p className="text-sm text-gray-700">
+          If you have any questions or need assistance with your lost item report, please contact our support team at{" "}
+          <a href="mailto:campusfindsrcas@gmail.com" className="text-blue-600 font-semibold hover:underline">
             campusfindsrcas@gmail.com
           </a>{" "}
           or visit the Lost & Found office in the Student Services Building.
