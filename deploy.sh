@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Deployment script for BelongiFy React App
-# This script ensures proper configuration for SPA routing
+# Vercel Deployment script for BelongiFy React App
+# This script ensures proper configuration for Vercel SPA routing
 
-echo "🚀 Starting BelongiFy deployment preparation..."
+echo "🚀 Starting BelongiFy Vercel deployment preparation..."
 
 # Check if we're in the right directory
 if [ ! -f "package.json" ]; then
@@ -29,36 +29,49 @@ fi
 
 echo "✅ Build completed successfully"
 
-# Verify redirects file
-if [ -f "public/_redirects" ]; then
-    echo "✅ Found _redirects file"
-    echo "📄 Redirects content:"
-    cat public/_redirects
+# Verify Vercel configuration
+if [ -f "vercel.json" ]; then
+    echo "✅ Found vercel.json"
+    echo "📄 Vercel configuration:"
+    cat vercel.json
 else
-    echo "⚠️  Warning: _redirects file not found"
+    echo "❌ Error: vercel.json not found - this is required for Vercel deployment"
+    exit 1
 fi
 
-# Verify netlify.toml
-if [ -f "netlify.toml" ]; then
-    echo "✅ Found netlify.toml"
-    echo "📄 Netlify configuration:"
-    cat netlify.toml
+# Check for Vercel CLI
+if command -v vercel &> /dev/null; then
+    echo "✅ Vercel CLI found"
+    echo "🚀 Ready to deploy with: vercel --prod"
 else
-    echo "⚠️  Warning: netlify.toml not found"
+    echo "⚠️  Vercel CLI not found. Install with: npm i -g vercel"
 fi
 
 echo ""
-echo "🎉 Deployment preparation complete!"
+echo "🎉 Vercel deployment preparation complete!"
 echo ""
 echo "📋 Next steps:"
-echo "1. Deploy the 'dist' folder to your hosting platform"
-echo "2. Ensure your hosting platform supports SPA routing"
-echo "3. Verify that redirects are working by testing /dashboard after deployment"
+echo "1. Commit and push changes:"
+echo "   git add ."
+echo "   git commit -m 'Fix Vercel SPA routing'"
+echo "   git push"
 echo ""
-echo "🔧 For Netlify:"
-echo "- The netlify.toml and _redirects files should handle routing automatically"
-echo "- If issues persist, check Netlify's redirects settings in the dashboard"
+echo "2. Deploy to Vercel:"
+echo "   Option A: Push to connected Git repository (auto-deploy)"
+echo "   Option B: Use Vercel CLI: vercel --prod"
+echo "   Option C: Redeploy from Vercel dashboard"
 echo ""
-echo "🔧 For other platforms:"
-echo "- Ensure all routes redirect to index.html with 200 status"
-echo "- Example: /* -> /index.html (200)"
+echo "3. Test the fix:"
+echo "   - Visit: https://campus-find-srcas.vercel.app/dashboard"
+echo "   - Refresh the page (F5)"
+echo "   - Should work without 404 error"
+echo ""
+echo "🔧 Vercel Configuration:"
+echo "- vercel.json handles SPA routing automatically"
+echo "- All routes redirect to index.html"
+echo "- Build output goes to 'dist' folder"
+echo ""
+echo "🚨 Important:"
+echo "- Remove netlify.toml and public/_redirects (not needed for Vercel)"
+echo "- Ensure vercel.json is in the root directory"
+echo "- Check Vercel dashboard for deployment logs if issues persist"
