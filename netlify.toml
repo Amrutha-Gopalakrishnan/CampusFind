@@ -5,8 +5,39 @@
 [build.environment]
   NODE_VERSION = "20.19.0"
 
-# Redirects for React Router
+# Redirects for React Router - Handle SPA routing
 [[redirects]]
   from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Additional redirects for common routes
+[[redirects]]
+  from = "/dashboard"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/lost"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/reportfound"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/status"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/signup"
   to = "/index.html"
   status = 200

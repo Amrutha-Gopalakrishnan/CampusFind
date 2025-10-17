@@ -12,6 +12,7 @@ import LogSignup from "./LogSignup";
 import Lost from "./Lost";
 import ReportFound from "./ReportFound";
 import Status from "./Status";
+import NotFound from "./NotFound";
 import { supabase, handleAuthError } from "./supabaseClient";
 
 // Private Route wrapper
@@ -160,8 +161,8 @@ function App() {
           <Route path="/login" element={<LogSignup initialTab="login" setUser={setUser} />} />
           <Route path="/signup" element={<LogSignup initialTab="signup" setUser={setUser} />} />
 
-          {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* Fallback - Handle any unmatched routes */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <ToastContainer

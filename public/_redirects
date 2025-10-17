@@ -1,1 +1,14 @@
+# Netlify redirects for React Router SPA
+# This ensures all routes are handled by React Router
+
+# Handle all routes - redirect to index.html with 200 status
 /*    /index.html   200
+
+# Specific route redirects (redundant but explicit)
+/dashboard    /index.html   200
+/lost         /index.html   200
+/reportfound  /index.html   200
+/status       /index.html   200
+/login        /index.html   200
+/signup       /index.html   200
+/home         /index.html   200
