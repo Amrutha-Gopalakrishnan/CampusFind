@@ -9,72 +9,97 @@ export default function Status({ user, setUser }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const attachProfileData = async (rows) => {
-    return Promise.all(
-      (rows || []).map(async (row) => {
-        let profile = null;
-
-        // ✅ Safely fetch profile without .single()
-        if (row.owner_email) {
-          const { data: profilesData, error } = await supabase
-            .from("profiles")
-            .select("avatar_url, full_name")
-            .eq("email", row.owner_email);
-
-          if (!error && profilesData?.length > 0) {
-            profile = profilesData[0];
-          }
-        }
-
-        // ✅ Get display name - prioritize the name from the form
-        let displayName = row.name || "-";
-        if (!displayName || displayName === "-") {
-          // Fallback to profile name or email if form name is not available
-          if (profile?.full_name) {
-            displayName = profile.full_name;
-          } else if (row.owner_email) {
-            displayName = row.owner_email.split("@")[0];
-          }
-        }
-
-        return {
-          ...row,
-          uploader_avatar: profile?.avatar_url || null,
-          uploader_name: displayName,
-        };
-      })
-    );
-  };
-
+  // Fast data fetch with optimized profile attachments
   const fetchData = async () => {
     setLoading(true);
     try {
-      const { data: lost } = await supabase.from("lost_items").select("*");
-      const { data: found } = await supabase.from("found_items").select("*");
+      // First, fetch items data quickly
+      const [lostRes, foundRes] = await Promise.allSettled([
+        supabase.from("lost_items").select("*").order('created_at', { ascending: false }).limit(30),
+        supabase.from("found_items").select("*").order('created_at', { ascending: false }).limit(30)
+      ]);
 
-      const lostWithProfiles = await attachProfileData(lost);
-      const foundWithProfiles = await attachProfileData(found);
+      const lostData = lostRes.status === 'fulfilled' ? (lostRes.value.data || []) : [];
+      const foundData = foundRes.status === 'fulfilled' ? (foundRes.value.data || []) : [];
 
-      setLostItems(lostWithProfiles);
-      setFoundItems(foundWithProfiles);
+      // Get unique emails for batch profile fetching
+      const allEmails = [...new Set([
+        ...lostData.map(item => item.owner_email).filter(Boolean),
+        ...foundData.map(item => item.owner_email).filter(Boolean)
+      ])];
+
+      // Batch fetch all profiles at once (much faster than individual queries)
+      let profilesMap = {};
+      if (allEmails.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("email, full_name, avatar_url")
+          .in("email", allEmails);
+        
+        // Create a map for fast lookup
+        profilesMap = (profiles || []).reduce((acc, profile) => {
+          acc[profile.email] = profile;
+          return acc;
+        }, {});
+      }
+
+      // Process items with profile data
+      const processedLost = lostData.map(item => {
+        const profile = profilesMap[item.owner_email];
+        return {
+          ...item,
+          uploader_name: item.name || profile?.full_name || item.owner_email?.split("@")[0] || "Anonymous",
+          uploader_avatar: profile?.avatar_url || null
+        };
+      });
+
+      const processedFound = foundData.map(item => {
+        const profile = profilesMap[item.owner_email];
+        return {
+          ...item,
+          uploader_name: item.name || profile?.full_name || item.owner_email?.split("@")[0] || "Anonymous",
+          uploader_avatar: profile?.avatar_url || null
+        };
+      });
+
+      setLostItems(processedLost);
+      setFoundItems(processedFound);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setLostItems([]);
+      setFoundItems([]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchData();
 
-    // ✅ Realtime subscription
+    // ✅ Realtime subscription with optimized profile fetching
     const lostSub = supabase
       .channel("lost_items_channel")
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "lost_items" },
         async (payload) => {
-          const rowWithProfile = (await attachProfileData([payload.new]))[0];
-          setLostItems((prev) => [rowWithProfile, ...prev]);
+          // Quick profile fetch for new item
+          let profile = null;
+          if (payload.new.owner_email) {
+            const { data: profilesData } = await supabase
+              .from("profiles")
+              .select("full_name, avatar_url")
+              .eq("email", payload.new.owner_email)
+              .limit(1);
+            profile = profilesData?.[0];
+          }
+          
+          const newItem = {
+            ...payload.new,
+            uploader_name: payload.new.name || profile?.full_name || payload.new.owner_email?.split("@")[0] || "Anonymous",
+            uploader_avatar: profile?.avatar_url || null
+          };
+          setLostItems((prev) => [newItem, ...prev]);
         }
       )
       .subscribe();
@@ -85,8 +110,23 @@ export default function Status({ user, setUser }) {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "found_items" },
         async (payload) => {
-          const rowWithProfile = (await attachProfileData([payload.new]))[0];
-          setFoundItems((prev) => [rowWithProfile, ...prev]);
+          // Quick profile fetch for new item
+          let profile = null;
+          if (payload.new.owner_email) {
+            const { data: profilesData } = await supabase
+              .from("profiles")
+              .select("full_name, avatar_url")
+              .eq("email", payload.new.owner_email)
+              .limit(1);
+            profile = profilesData?.[0];
+          }
+          
+          const newItem = {
+            ...payload.new,
+            uploader_name: payload.new.name || profile?.full_name || payload.new.owner_email?.split("@")[0] || "Anonymous",
+            uploader_avatar: profile?.avatar_url || null
+          };
+          setFoundItems((prev) => [newItem, ...prev]);
         }
       )
       .subscribe();
@@ -104,6 +144,7 @@ export default function Status({ user, setUser }) {
 
   const items = tab === "lost" ? lostItems : foundItems;
   const filteredItems = items.filter(item => 
+    !searchTerm || 
     item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.register_number?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -289,6 +330,7 @@ export default function Status({ user, setUser }) {
                               alt={`${item.uploader_name} Avatar`}
                               className="w-10 h-10 object-cover rounded-xl border-2 border-white shadow-lg"
                               onError={(e) => {
+                                console.warn('Avatar failed to load:', e.target.src);
                                 e.target.style.display = 'none';
                                 e.target.nextElementSibling.style.display = 'flex';
                               }}

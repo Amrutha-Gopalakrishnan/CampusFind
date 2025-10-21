@@ -5,14 +5,16 @@ import Lost from "./Lost";
 import Status from "./Status";
 import Profile from "./Profile";
 import AdminDashboard from "./AdminDashBoard";
+import AnalyticsDashboard from "./AnalyticsDashboard";
 
 export default function Dashboard({ user, setUser }) {
-  const [active, setActive] = useState("found"); // 'found' | 'lost' | 'status' | 'profile' | 'admin'
+  const [active, setActive] = useState("found"); // 'found' | 'lost' | 'status' | 'analytics' | 'profile' | 'admin'
 
   const renderContent = () => {
     if (active === "lost") return <Lost user={user} setUser={setUser} />;
     if (active === "found") return <ReportFound user={user} setUser={setUser} />;
     if (active === "status") return <Status user={user} setUser={setUser} />;
+    if (active === "analytics") return <AnalyticsDashboard user={user} setUser={setUser} />;
     if (active === "profile") return <Profile user={user} setUser={setUser} />;
     if (active === "admin") return <AdminDashboard user={user} setUser={setUser} />;
     return null;

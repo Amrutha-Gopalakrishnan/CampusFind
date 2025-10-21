@@ -1,11 +1,13 @@
-import { Home, Search, ClipboardList, User, Menu, X, Shield, LogOut, Settings, Bell } from "lucide-react";
+import { Home, Search, ClipboardList, User, Menu, X, Shield, LogOut, Settings, Bell, BarChart3, Filter, Package, TrendingUp } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
+import { getSafeAvatarUrl } from "./utils/avatarManager";
 
 export default function Sidebar({ active, onNavigate, user, setUser }) {
   const [isOpen, setIsOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [avatarError, setAvatarError] = useState(false);
   const navigate = useNavigate();
 
   // Fetch user profile data
@@ -99,6 +101,13 @@ export default function Sidebar({ active, onNavigate, user, setUser }) {
       description: "Track your reports"
     },
     {
+      id: "analytics",
+      label: "📊 Analytics Dashboard",
+      icon: BarChart3,
+      action: () => onNavigate("analytics"),
+      description: "Real-time insights & AI analytics"
+    },
+    {
       id: "profile",
       label: "Profile",
       icon: User,
@@ -170,28 +179,35 @@ export default function Sidebar({ active, onNavigate, user, setUser }) {
           <div className="p-6 border-b border-gray-200/50">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-12 h-12 rounded-2xl shadow-lg overflow-hidden">
+                        {(() => {
+                          // Show actual avatar for both students and faculty
+                          console.log('Sidebar: Avatar display check - userProfile:', userProfile, 'avatar_url:', userProfile?.avatar_url);
+                          return userProfile?.avatar_url && !avatarError ? (
+                            <img
+                              src={userProfile.avatar_url}
+                              alt="Avatar"
+                              className="w-full h-full object-cover"
+                              onError={async (e) => {
+                                console.warn('Sidebar: Avatar image failed to load:', e.target.src);
+                                setAvatarError(true);
+                                // Clean up invalid URL from database
+                                try {
+                                  await supabase
+                                    .from('profiles')
+                                    .update({ avatar_url: null })
+                                    .eq('email', userProfile.email);
+                                } catch (error) {
+                                  console.error('Error cleaning up invalid avatar URL:', error);
+                                }
+                              }}
+                            />
+                          ) : null;
+                        })()}
                 {(() => {
-                  // Show actual avatar for both students and faculty
-                  console.log('Sidebar: Avatar display check - userProfile:', userProfile, 'avatar_url:', userProfile?.avatar_url);
-                  return userProfile?.avatar_url ? (
-                    <img
-                      src={userProfile.avatar_url}
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        console.error('Sidebar: Avatar image failed to load:', e.target.src);
-                        // Fallback to initials if image fails to load
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : null;
-                })()}
-                {(() => {
-                  // Show fallback initials for both students and faculty if no avatar
+                  // Show fallback initials for both students and faculty if no avatar or error
                   return (
                     <div 
-                      className={`w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center ${userProfile?.avatar_url ? 'hidden' : 'flex'}`}
+                      className={`w-full h-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center ${userProfile?.avatar_url && !avatarError ? 'hidden' : 'flex'}`}
                     >
                       <span className="text-white font-bold text-lg">
                         {userProfile?.full_name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || "U"}

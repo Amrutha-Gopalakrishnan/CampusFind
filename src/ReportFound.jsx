@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 import { Upload, Camera, User, Phone, Building, Hash, MapPin, Calendar, Clock, CheckCircle, HandHeart, LogOut, ArrowRight } from "lucide-react";
 import { useAlert, CustomAlert } from "./CustomAlert";
+import ImageUploader from "./components/ImageUploader";
 
 export default function ReportFoundBelonging({ user, setUser }) {
   const { alert, success, error, warning, info, hideAlert } = useAlert();
@@ -20,8 +21,8 @@ export default function ReportFoundBelonging({ user, setUser }) {
     agree: false,
     handover: false,
   });
-  const [file, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
+  const [compressedFile, setCompressedFile] = useState(null);
+  const [compressing, setCompressing] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -50,42 +51,13 @@ export default function ReportFoundBelonging({ user, setUser }) {
     });
   };
 
-  const handleFileChange = async (e) => {
-    const selected = e.target.files && e.target.files[0];
-    if (!selected) return;
-    if (!authUser?.id) {
-      error("You must be logged in to upload an image.", 'Authentication Required');
-      return;
+  const handleImageChange = (files, imageObjects) => {
+    if (files && files.length > 0) {
+      setCompressedFile(files[0]); // Take only the first compressed file
+      console.log('Compressed image ready:', files[0].name, 'Size:', files[0].size / 1024, 'KB');
+    } else {
+      setCompressedFile(null);
     }
-
-    setUploading(true);
-
-    if (imageUrl) {
-      await deleteImageFromSupabase(imageUrl);
-      setImageUrl("");
-      setFile(null);
-    }
-
-    setFile(selected);
-
-    const fileName = `${authUser.id}_${Date.now()}_${selected.name}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("lost-found-images")
-      .upload(fileName, selected, { upsert: true });
-
-    if (uploadError) {
-      setUploading(false);
-      console.error("Upload error:", uploadError);
-      return error(uploadError.message, 'Upload Failed');
-    }
-
-    const { data: publicUrlData } = supabase.storage
-      .from("lost-found-images")
-      .getPublicUrl(fileName);
-
-    setImageUrl(publicUrlData.publicUrl);
-    setUploading(false);
   };
 
   const deleteImageFromSupabase = async (url) => {
@@ -114,46 +86,89 @@ export default function ReportFoundBelonging({ user, setUser }) {
 
     if (!currentUserId || !ownerEmail) return error("You must be logged in to submit.", 'Authentication Required');
 
-    const { error: insertError } = await supabase.from("found_items").insert([
-      {
-        title: formData.title,
-        description: formData.description,
-        name: formData.name,
-        phone_number: formData.phone,
-        department: formData.deptShift,
-        register_number: formData.regNo,
-        place: formData.place,
-        date: formData.date || null,
-        time: formData.time || null,
-        status: formData.status,
-        image_url: imageUrl || null,
-        owner_email: ownerEmail,
-      },
-    ]);
+    setUploading(true);
 
-    if (insertError) {
-      console.error("Insert error:", insertError);
-      return error(insertError.message, 'Submission Failed');
+    try {
+      // Upload compressed image if any
+      let imageUrl = null;
+      if (compressedFile) {
+        // Sanitize filename to remove special characters that cause issues
+        const sanitizedOriginalName = compressedFile.name
+          .replace(/[{}[\]()&$#@!%^*+=|\\:";'<>?,./]/g, '_') // Replace special chars with underscore
+          .replace(/\s+/g, '_') // Replace spaces with underscore
+          .replace(/_+/g, '_') // Replace multiple underscores with single
+          .replace(/^_|_$/g, ''); // Remove leading/trailing underscores
+        
+        const fileName = `${currentUserId}_${Date.now()}_${sanitizedOriginalName}`;
+        
+        console.log('Uploading file:', fileName);
+        
+        const { error: uploadError } = await supabase.storage
+          .from("lost-found-images")
+          .upload(fileName, compressedFile, { upsert: true });
+
+        if (uploadError) {
+          throw new Error(`Failed to upload image: ${uploadError.message}`);
+        }
+
+        const { data: publicUrlData } = supabase.storage
+          .from("lost-found-images")
+          .getPublicUrl(fileName);
+
+        imageUrl = publicUrlData.publicUrl;
+      }
+
+      // Submit form data
+      const { error: insertError } = await supabase.from("found_items").insert([
+        {
+          title: formData.title,
+          description: formData.description,
+          name: formData.name,
+          phone_number: formData.phone,
+          department: formData.deptShift,
+          register_number: formData.regNo,
+          place: formData.place,
+          date: formData.date || null,
+          time: formData.time || null,
+          status: formData.status,
+          image_url: imageUrl, // Single image URL
+          owner_email: ownerEmail,
+        },
+      ]);
+
+      if (insertError) {
+        console.error("Insert error:", insertError);
+        return error(insertError.message, 'Submission Failed');
+      }
+
+      success("Found item reported successfully!", 'Success');
+      setFormData({
+        title: "",
+        description: "",
+        name: "",
+        phone: "",
+        deptShift: "",
+        regNo: "",
+        place: "",
+        date: "",
+        time: "",
+        status: "Pending",
+        agree: false,
+        handover: false,
+      });
+      setCompressedFile(null);
+      // Clear file input safely
+      const fileInput = document.getElementById("fileUpload");
+      if (fileInput) {
+        fileInput.value = "";
+      }
+
+    } catch (err) {
+      console.error("Submission error:", err);
+      error(`Failed to submit report: ${err.message}`, 'Submission Failed');
+    } finally {
+      setUploading(false);
     }
-
-    success("Found item reported successfully!", 'Success');
-    setFormData({
-      title: "",
-      description: "",
-      name: "",
-      phone: "",
-      deptShift: "",
-      regNo: "",
-      place: "",
-      date: "",
-      time: "",
-      status: "Pending",
-      agree: false,
-      handover: false,
-    });
-    setFile(null);
-    setImageUrl("");
-    document.getElementById("fileUpload").value = "";
   };
 
   const handleSignOut = async () => {
@@ -197,42 +212,30 @@ export default function ReportFoundBelonging({ user, setUser }) {
       <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Image Upload */}
-          <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 flex flex-col items-center justify-center bg-gray-50/50">
-            <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-blue-100 rounded-2xl flex items-center justify-center mb-4 overflow-hidden">
-              {imageUrl ? (
-                <img src={imageUrl} alt="Uploaded" className="object-cover w-full h-full rounded-2xl" />
-              ) : (
-                <Camera className="w-8 h-8 text-gray-400" />
-              )}
-            </div>
-            <input
-              id="fileUpload"
-              type="file"
-              className="hidden"
-              accept="image/*"
-              onChange={handleFileChange}
-              disabled={!!imageUrl || uploading}
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-3">
+              Upload Image (Optional)
+            </label>
+            <ImageUploader
+              onImagesChange={handleImageChange}
+              maxImages={1}
+              maxFileSize={5 * 1024 * 1024} // 5MB max original size
+              targetSizeKB={100} // Compress to under 100KB
+              disabled={uploading}
+              className="mb-4"
             />
-            {!imageUrl && (
-              <label
-                htmlFor="fileUpload"
-                className={`px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer flex items-center gap-2 ${
-                  uploading ? "opacity-50 pointer-events-none" : ""
-                }`}
-              >
-                <Upload className="w-5 h-5" />
-                {uploading ? "Uploading..." : "Choose Image"}
-              </label>
-            )}
-            {imageUrl && (
-              <button
-                type="button"
-                className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
-                onClick={handleReupload}
-              >
-                <Camera className="w-5 h-5" />
-                Reupload
-              </button>
+            
+            {/* Image Summary */}
+            {compressedFile && (
+              <div className="bg-green-50 rounded-lg p-3">
+                <div className="flex items-center space-x-2 text-sm text-green-700">
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <span>Image compressed and ready for upload</span>
+                </div>
+                <div className="text-xs text-green-600 mt-1">
+                  Final size: {(compressedFile.size / 1024).toFixed(1)}KB
+                </div>
+              </div>
             )}
           </div>
 
@@ -439,10 +442,22 @@ export default function ReportFoundBelonging({ user, setUser }) {
             </button>
             <button
               type="submit"
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+              disabled={uploading}
+              className={`flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 ${
+                uploading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              Submit Found Report
-              <ArrowRight className="w-5 h-5" />
+              {uploading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Uploading...</span>
+                </>
+              ) : (
+                <>
+                  Submit Found Report
+                  <ArrowRight className="w-5 h-5" />
+                </>
+              )}
             </button>
           </div>
         </form>

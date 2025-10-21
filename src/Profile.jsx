@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
-import { User, Camera, Save, Edit, Trash2, Eye, MapPin, Calendar, Hash, Phone, Mail, GraduationCap, Building, Sparkles, Upload, CheckCircle, AlertCircle, X, RefreshCw } from "lucide-react";
+import { User, Camera, Save, Edit, Trash2, Eye, MapPin, Calendar, Hash, Phone, Mail, GraduationCap, Building, Sparkles, Upload, CheckCircle, AlertCircle, X, RefreshCw, Shield } from "lucide-react";
 import { useAlert, useConfirm, CustomAlert, CustomConfirm } from "./CustomAlert";
+import { uploadAvatarWithValidation, getSafeAvatarUrl, useAvatarManager } from "./utils/avatarManager";
+import { deleteItemWithImage, deleteAvatarWithCleanup } from "./utils/imageDeletion";
 
 export default function Profile({ user }) {
   const { alert, success, error, warning, info, hideAlert } = useAlert();
   const { confirm, showConfirm, hideConfirm } = useConfirm();
+  const { isCleaning, cleanupStats, performCleanup } = useAvatarManager();
   const [profile, setProfile] = useState({ 
     fullName: "", 
     email: user?.email || "", 
@@ -285,23 +288,9 @@ export default function Profile({ user }) {
     }
   };
 
-  // Avatar upload function
+  // Enhanced avatar upload function with validation
   const handleAvatarUpload = async (file) => {
     if (!file) return;
-    
-    // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      error('Please upload a valid image file (JPEG, PNG, GIF, or WebP)', 'Invalid File Type');
-      return;
-    }
-
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      error('File size must be less than 5MB', 'File Too Large');
-      return;
-    }
     
     setUploading(true);
     try {
@@ -310,48 +299,17 @@ export default function Profile({ user }) {
         await deleteOldAvatar(profile.avatar_url);
       }
 
-      // Generate unique filename using user ID
-      const fileExt = file.name.split('.').pop().toLowerCase();
-      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
-      const filePath = fileName;
-
-      console.log('Uploading avatar:', { fileName, filePath, userId: user.id, fileSize: file.size });
-
-      // Upload to Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { 
-          upsert: true,
-          cacheControl: '3600',
-          contentType: file.type
-        });
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        error('Failed to upload avatar: ' + uploadError.message, 'Upload Failed');
-        setUploading(false);
-        return;
-      }
-
-      // Get public URL
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      if (!data?.publicUrl) {
-        error('Failed to get public URL for avatar', 'Upload Failed');
-        setUploading(false);
-        return;
-      }
-
-      console.log('Avatar uploaded successfully:', data.publicUrl);
+      // Use the enhanced upload function with validation
+      const uploadResult = await uploadAvatarWithValidation(file, user.id);
+      
+      console.log('Avatar uploaded successfully:', uploadResult.publicUrl);
 
       // Update profile state immediately
-      setAvatarPreview(data.publicUrl);
-      setProfile(prev => ({ ...prev, avatar_url: data.publicUrl }));
+      setAvatarPreview(uploadResult.publicUrl);
+      setProfile(prev => ({ ...prev, avatar_url: uploadResult.publicUrl }));
       
       // Save to database
-      console.log('Saving avatar URL to database:', data.publicUrl);
+      console.log('Saving avatar URL to database:', uploadResult.publicUrl);
       const { error: updateError } = await supabase.rpc('update_user_profile', {
         new_full_name: profile.fullName,
         new_department: profile.department || null,
@@ -359,7 +317,7 @@ export default function Profile({ user }) {
         new_dept_year: profile.dept_year || null,
         new_phone: profile.phone || null,
         new_alt_phone: profile.altPhone || null,
-        new_avatar_url: data.publicUrl
+        new_avatar_url: uploadResult.publicUrl
       });
 
       if (updateError) {
@@ -481,7 +439,7 @@ export default function Profile({ user }) {
     }
   };
 
-  // Delete avatar function
+  // Enhanced delete avatar function with cleanup
   const handleDeleteAvatar = async () => {
     const confirmed = await showConfirm(
       "Are you sure you want to delete your avatar?",
@@ -494,45 +452,33 @@ export default function Profile({ user }) {
 
     setLoading(true);
     try {
-      // Delete the avatar from storage if it exists
-      if (profile.avatar_url) {
-        await deleteOldAvatar(profile.avatar_url);
-      }
-
-      // Update profile to remove avatar URL
-      console.log('Removing avatar URL from database');
-      const { error: updateError } = await supabase.rpc('update_user_profile', {
-        new_full_name: profile.fullName,
-        new_department: profile.department || null,
-        new_reg_number: profile.reg_number || null,
-        new_dept_year: profile.dept_year || null,
-        new_phone: profile.phone || null,
-        new_alt_phone: profile.altPhone || null,
-        new_avatar_url: null
-      });
-
-      if (updateError) {
-        console.error('Profile update error:', updateError);
-        error("Failed to remove avatar from profile: " + updateError.message, 'Update Failed');
-        return;
-      }
-
-      console.log('Avatar URL removed from database successfully');
-
-      // Update local state immediately and force UI update
-      setProfile(prev => ({ ...prev, avatar_url: "" }));
-      setAvatarPreview(null);
-
-      success("Avatar deleted successfully!", 'Avatar Deleted');
+      console.log('Starting avatar deletion for user:', user.id);
       
-      // Clear any cached images by updating the image src with cache-busting
-      const avatarImages = document.querySelectorAll('img[alt="Avatar"]');
-      avatarImages.forEach(img => {
-        img.style.display = 'none';
-      });
+      // Use the enhanced avatar deletion function
+      const result = await deleteAvatarWithCleanup(user.id, profile.avatar_url);
       
-      // Force immediate UI update without page refresh
-      console.log('Avatar deleted - UI updated immediately');
+      if (result.success) {
+        // Update local state immediately
+        setProfile(prev => ({ ...prev, avatar_url: "" }));
+        setAvatarPreview(null);
+
+        // Show success message with image deletion info
+        if (result.imageDeletionResult.success) {
+          success("Avatar deleted successfully!", 'Avatar Deleted');
+        } else {
+          warning(`Avatar removed from profile, but image deletion failed: ${result.imageDeletionResult.message}`, 'Partial Success');
+        }
+        
+        // Clear any cached images by updating the image src with cache-busting
+        const avatarImages = document.querySelectorAll('img[alt="Avatar"]');
+        avatarImages.forEach(img => {
+          img.style.display = 'none';
+        });
+        
+        console.log('Avatar deleted - UI updated immediately');
+      } else {
+        error(`Failed to delete avatar: ${result.message}`, 'Delete Failed');
+      }
 
     } catch (error) {
       console.error('Delete avatar error:', error);
@@ -685,7 +631,7 @@ export default function Profile({ user }) {
     }
   };
 
-  // Delete item function
+  // Enhanced delete item function with image cleanup
   const handleDeleteItem = async (table, id) => {
     // Check if this item is already being deleted
     if (deletingItems.has(id)) {
@@ -714,33 +660,30 @@ export default function Profile({ user }) {
     setDeletingItems(prev => new Set([...prev, id]));
     
     try {
-      // First, get the item to check if it has an image
-      const currentItems = table === "lost_items" ? lostItems : foundItems;
-      const itemToDelete = currentItems.find(item => item.id === id);
+      console.log(`Starting deletion of item ${id} from ${table}`);
       
-      // Delete the image from storage if it exists
-      if (itemToDelete?.image_url) {
-        await deleteImageFromStorage(itemToDelete.image_url);
-      }
-
-      // Delete the item from database
-    const { error } = await supabase
-      .from(table)
-      .delete()
-      .eq("id", id)
-      .eq("owner_email", user.email);
+      // Use the enhanced deletion function
+      const result = await deleteItemWithImage(table, id, user.email);
+      
+      if (result.success) {
+        // Update local state
+        if (table === "lost_items") {
+          setLostItems((prev) => prev.filter((i) => i.id !== id));
+        } else {
+          setFoundItems((prev) => prev.filter((i) => i.id !== id));
+        }
         
-    if (!error) {
-      if (table === "lost_items") {
-        setLostItems((prev) => prev.filter((i) => i.id !== id));
+        // Show success message with image deletion info
+        if (result.imageDeletionResult.success) {
+          success("Item and image deleted successfully!", 'Success');
+        } else {
+          warning(`Item deleted, but image deletion failed: ${result.imageDeletionResult.message}`, 'Partial Success');
+        }
       } else {
-        setFoundItems((prev) => prev.filter((i) => i.id !== id));
-      }
-        success("Item deleted successfully!", 'Success');
-    } else {
-        error("Failed to delete item: " + error.message, 'Delete Failed');
+        error(`Failed to delete item: ${result.message}`, 'Delete Failed');
       }
     } catch (err) {
+      console.error('Unexpected error during item deletion:', err);
       error("Failed to delete item: " + err.message, 'Delete Failed');
     } finally {
       // Remove from deleting set
@@ -1080,14 +1023,27 @@ export default function Profile({ user }) {
                   
                   <button
                     onClick={async () => {
-                      await cleanupInvalidAvatar();
-                      success("Avatar cleaned up successfully!", 'Cleanup Complete');
+                      try {
+                        const stats = await performCleanup();
+                        success(`Cleanup completed! Cleaned ${stats.invalidUrlsCleaned} invalid URLs and ${stats.orphanedFilesDeleted} orphaned files.`, 'Cleanup Complete');
+                      } catch (error) {
+                        error('Cleanup failed: ' + error.message, 'Cleanup Error');
+                      }
                     }}
-                    disabled={loading}
+                    disabled={loading || isCleaning}
                     className="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <X className="w-5 h-5" />
-                    Clean Avatar
+                    {isCleaning ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Cleaning...
+                      </>
+                    ) : (
+                      <>
+                        <Shield className="w-5 h-5" />
+                        Clean All Avatars
+                      </>
+                    )}
                   </button>
                 </div>
                 

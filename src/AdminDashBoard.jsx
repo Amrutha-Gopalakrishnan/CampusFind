@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
 import { Shield, LogOut, ArrowRight, Eye, Calendar, User, Hash, Building, Phone, Clock, Search, Filter, CheckCircle, AlertCircle, Sparkles, Edit, Trash2, Save, X } from "lucide-react";
 import { useAlert, useConfirm, CustomAlert, CustomConfirm } from "./CustomAlert";
+import { deleteItemWithImage } from "./utils/imageDeletion";
 
 const LockIcon = (props) => (
   <svg
@@ -26,7 +27,7 @@ export default function AdminDashboard({ user, setUser }) {
   const { confirm, showConfirm, hideConfirm } = useConfirm();
   const [authUser, setAuthUser] = useState(user || null);
   const [isFaculty, setIsFaculty] = useState(false);
-  const [tab, setTab] = useState("lost"); // 'lost' | 'found'
+  const [tab, setTab] = useState("lost"); // 'lost' | 'found' | 'cleanup'
   const [lostItems, setLostItems] = useState([]);
   const [foundItems, setFoundItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -501,7 +502,7 @@ export default function AdminDashboard({ user, setUser }) {
     }
   };
 
-  // Delete item function
+  // Enhanced delete item function with image cleanup
   const handleDeleteItem = async (itemId) => {
     // Check if this item is already being deleted
     if (deletingItems.has(itemId)) {
@@ -532,51 +533,47 @@ export default function AdminDashboard({ user, setUser }) {
     const tableName = tab === "lost" ? "lost_items" : "found_items";
     
     try {
-      // First, get the item to check if it has an image
+      console.log(`Starting deletion of item ${itemId} from ${tableName}`);
+      
+      // Get the item owner email for proper deletion
       const currentItems = tab === "lost" ? lostItems : foundItems;
       const itemToDelete = currentItems.find(item => item.id === itemId);
       
-      console.log('Deleting item:', { itemId, tableName, itemToDelete });
-      
-      // Delete the image from storage if it exists
-      if (itemToDelete?.image_url) {
-        console.log('Deleting image from storage:', itemToDelete.image_url);
-        await deleteImageFromStorage(itemToDelete.image_url);
-      }
-
-      // Delete the item from database
-      console.log('Deleting from database:', { tableName, itemId });
-      const { error } = await supabase
-        .from(tableName)
-        .delete()
-        .eq("id", itemId);
-
-      if (error) {
-        console.error('Database deletion error:', error);
-        error("Failed to delete item: " + error.message, 'Delete Failed');
+      if (!itemToDelete) {
+        error("Item not found in current view", 'Delete Failed');
         return;
       }
-
-      console.log('Item deleted successfully from database');
-
-      // Update local state immediately
-      if (tab === "lost") {
-        setLostItems(prev => {
-          const filtered = prev.filter(item => item.id !== itemId);
-          console.log('Updated lost items:', filtered.length);
-          return filtered;
-        });
+      
+      // Use the enhanced deletion function
+      const result = await deleteItemWithImage(tableName, itemId, itemToDelete.owner_email);
+      
+      if (result.success) {
+        // Update local state
+        if (tab === "lost") {
+          setLostItems(prev => {
+            const filtered = prev.filter(item => item.id !== itemId);
+            console.log('Updated lost items:', filtered.length);
+            return filtered;
+          });
+        } else {
+          setFoundItems(prev => {
+            const filtered = prev.filter(item => item.id !== itemId);
+            console.log('Updated found items:', filtered.length);
+            return filtered;
+          });
+        }
+        
+        // Show success message with image deletion info
+        if (result.imageDeletionResult.success) {
+          success("Item and image deleted successfully!", 'Success');
+        } else {
+          warning(`Item deleted, but image deletion failed: ${result.imageDeletionResult.message}`, 'Partial Success');
+        }
       } else {
-        setFoundItems(prev => {
-          const filtered = prev.filter(item => item.id !== itemId);
-          console.log('Updated found items:', filtered.length);
-          return filtered;
-        });
+        error(`Failed to delete item: ${result.message}`, 'Delete Failed');
       }
-
-      success("Item deleted successfully!", 'Success');
     } catch (err) {
-      console.error('Delete item error:', err);
+      console.error('Unexpected error during item deletion:', err);
       error("Failed to delete item: " + err.message, 'Delete Failed');
     } finally {
       // Remove from deleting set
