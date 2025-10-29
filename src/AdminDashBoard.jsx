@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "./supabaseClient";
-import { Shield, LogOut, ArrowRight, Eye, Calendar, User, Hash, Building, Phone, Clock, Search, Filter, CheckCircle, AlertCircle, Sparkles, Edit, Trash2, Save, X } from "lucide-react";
+import { Shield, LogOut, ArrowRight, Eye, Calendar, User, Hash, Building, Phone, Clock, Search, Filter, CheckCircle, AlertCircle, Sparkles, Edit, Trash2, Save, X, ZoomIn, Image as ImageIcon } from "lucide-react";
 import { useAlert, useConfirm, CustomAlert, CustomConfirm } from "./CustomAlert";
 import { deleteItemWithImage } from "./utils/imageDeletion";
 
@@ -37,6 +37,8 @@ export default function AdminDashboard({ user, setUser }) {
   const [deletingItems, setDeletingItems] = useState(new Set());
   const [isProcessingRealtime, setIsProcessingRealtime] = useState(false);
   const [profileCache, setProfileCache] = useState(new Map());
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [showImageModal, setShowImageModal] = useState(false);
 
   // Check if user is faculty based on email pattern
   const checkFacultyStatus = (email) => {
@@ -358,6 +360,18 @@ export default function AdminDashboard({ user, setUser }) {
     }
   };
 
+  // Handle image click to show modal
+  const handleImageClick = (imageUrl, itemTitle) => {
+    setSelectedImage({ url: imageUrl, title: itemTitle });
+    setShowImageModal(true);
+  };
+
+  // Close image modal
+  const closeImageModal = () => {
+    setShowImageModal(false);
+    setSelectedImage(null);
+  };
+
   // Edit item function
   const handleEditItem = (item) => {
     setEditingItem(item.id);
@@ -418,14 +432,13 @@ export default function AdminDashboard({ user, setUser }) {
         
         // If it's a 400 error, try updating without empty fields
         if (error.code === 'PGRST204' || error.message.includes('400')) {
-          const cleanUpdateData = {};
-          Object.keys(updateData).forEach(key => {
-            if (updateData[key] && updateData[key].trim() !== '') {
-              cleanUpdateData[key] = updateData[key];
+          // Retry with cleaned data
+          const cleanUpdateData = { ...updateData };
+          Object.keys(cleanUpdateData).forEach(key => {
+            if (cleanUpdateData[key] === undefined || cleanUpdateData[key] === null || cleanUpdateData[key] === '') {
+              delete cleanUpdateData[key];
             }
           });
-          
-          console.log('Retrying with clean data:', cleanUpdateData);
           
           const { data: retryData, error: retryError } = await supabase
             .from(tableName)
@@ -435,11 +448,8 @@ export default function AdminDashboard({ user, setUser }) {
             
           if (retryError) {
             error("Failed to update item: " + retryError.message, 'Update Failed');
-            console.error('Retry error:', retryError);
             return;
           }
-          
-          console.log('Retry successful:', retryData);
         } else {
           error("Failed to update item: " + error.message, 'Update Failed');
           return;
@@ -879,13 +889,30 @@ export default function AdminDashboard({ user, setUser }) {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {item.item_image_url ? (
-                        <img
-                          src={item.item_image_url}
-                          alt="Item"
-                          className="w-12 h-12 object-cover rounded-xl border border-gray-200 shadow-lg"
-                        />
+                        <div className="relative group">
+                          <img
+                            src={item.item_image_url}
+                            alt="Item"
+                            className="w-16 h-16 object-cover rounded-xl border border-gray-200 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-200 hover:scale-105"
+                            onClick={() => handleImageClick(item.item_image_url, item.title || item.description || 'Item')}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextElementSibling.style.display = 'flex';
+                            }}
+                          />
+                          <div 
+                            className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl border border-gray-200 shadow-lg flex items-center justify-center text-gray-500 text-xs hidden"
+                          >
+                            <ImageIcon className="w-6 h-6" />
+                          </div>
+                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200">
+                            <ZoomIn className="w-6 h-6 text-white" />
+                          </div>
+                        </div>
                       ) : (
-                        <span className="text-gray-400 text-xs">No Image</span>
+                        <div className="w-16 h-16 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl border border-gray-200 shadow-lg flex items-center justify-center text-gray-500 text-xs">
+                          <ImageIcon className="w-6 h-6" />
+                        </div>
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -992,6 +1019,36 @@ export default function AdminDashboard({ user, setUser }) {
           Faculty members can monitor student submissions and track item statuses in real-time.
         </p>
       </div>
+
+      {/* Image Modal */}
+      {showImageModal && selectedImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900 truncate">
+                {selectedImage.title}
+              </h3>
+              <button
+                onClick={closeImageModal}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+              >
+                <X className="w-6 h-6 text-gray-500" />
+              </button>
+            </div>
+            <div className="p-4">
+              <img
+                src={selectedImage.url}
+                alt={selectedImage.title}
+                className="max-w-full max-h-[70vh] object-contain rounded-lg"
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTI1SDIyNVYxNzVIMTc1VjEyNVoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTE1MCAxMDBIMjUwVjIwMEgxNTBWMTUwWiIgZmlsbD0iIzlDQTNBRiIvPgo8L3N2Zz4K';
+                  e.target.alt = 'Image failed to load';
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

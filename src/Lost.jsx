@@ -17,7 +17,7 @@ export default function ReportLostBelonging({ user, setUser }) {
     place: "",
     date: "",
     time: "",
-    status: "Pending",
+    status: "Lost",
     agree: false,
     handover: false,
   });
@@ -146,7 +146,7 @@ export default function ReportLostBelonging({ user, setUser }) {
         place: "",
         date: "",
         time: "",
-        status: "Pending",
+        status: "Lost",
         agree: false,
         handover: false,
       });
@@ -343,7 +343,7 @@ export default function ReportLostBelonging({ user, setUser }) {
             </div>
           </div>
 
-          {/* Date, Time & Status */}
+          {/* Date & Time & Status */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
@@ -376,17 +376,14 @@ export default function ReportLostBelonging({ user, setUser }) {
                 <CheckCircle className="w-4 h-4 inline mr-1" />
                 Status
               </label>
-              <select
+              <input
+                type="text"
                 name="status"
                 value={formData.status}
-                onChange={handleChange}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-              >
-                <option>Pending</option>
-                <option>Found</option>
-                <option>Claimed</option>
-                <option>Lost</option>
-              </select>
+                readOnly
+                disabled
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-100 text-gray-600 cursor-not-allowed"
+              />
             </div>
           </div>
 

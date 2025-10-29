@@ -1,7 +1,7 @@
 import { Home, Search, ClipboardList, User, Menu, X, Shield, LogOut, Settings, Bell, BarChart3, Filter, Package, TrendingUp } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "./supabaseClient";
+import { supabase } from "./supabaseClient"; // adjust path if needed
 import { getSafeAvatarUrl } from "./utils/avatarManager";
 
 export default function Sidebar({ active, onNavigate, user, setUser }) {
@@ -10,39 +10,55 @@ export default function Sidebar({ active, onNavigate, user, setUser }) {
   const [avatarError, setAvatarError] = useState(false);
   const navigate = useNavigate();
 
+  const mountedRef = useRef(false);
+
   // Fetch user profile data
+  useEffect(() => {
+    if (mountedRef.current) return;
+    mountedRef.current = true;
+
+    async function loadProfile() {
+      try {
+        const authResp = await supabase.auth.getUser();
+        const authUser = authResp.data?.user || null;
+        const email = authUser?.email || user?.email;
+        if (!email) return;
+
+        // Use auth user first (safe), fallback to profiles table only if needed
+        if (authUser && authUser.email === email) {
+          setUserProfile({ id: authUser.id, email: authUser.email });
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("email", email)
+          .limit(1)
+          .single();
+
+        if (error) {
+          if (error.code === "42501" || /permission denied/i.test(error.message || "")) {
+            console.warn("Supabase permission denied when selecting profiles. Check RLS/policies.");
+            return;
+          }
+          console.error("Error fetching profile from profiles table:", error);
+          return;
+        }
+
+        setUserProfile(data || null);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      }
+    }
+
+    loadProfile();
+  }, [user]);
+
+  // Set up realtime subscription to listen for profile updates
   useEffect(() => {
     if (!user) return;
     
-    const fetchUserProfile = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('email', user.email)
-          .maybeSingle();
-        
-        if (error) {
-          console.error('Error fetching user profile:', error);
-          return;
-        }
-        
-         if (data) {
-           setUserProfile(data);
-           console.log('Sidebar: Profile loaded with avatar:', data.avatar_url);
-           console.log('Sidebar: Full profile data:', data);
-           console.log('Sidebar: Avatar URL is valid:', !!data.avatar_url);
-         } else {
-           console.log('Sidebar: No profile found for user:', user.email);
-         }
-      } catch (err) {
-        console.error('Sidebar: Error in fetchUserProfile:', err);
-      }
-    };
-    
-    fetchUserProfile();
-    
-    // Set up realtime subscription to listen for profile updates
     const profileSubscription = supabase
       .channel('profile_changes')
       .on(

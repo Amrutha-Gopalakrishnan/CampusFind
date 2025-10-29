@@ -55,7 +55,7 @@ const Secure = () => {
               </div>
               <div className="text-left">
                 <h2 className='text-4xl font-black text-gray-900 mb-2'>Secure Campus Platform</h2>
-                <p className='text-lg text-gray-600 font-medium'>Verified college community access only</p>
+                <p className='text-lg text-gray-700 font-medium'>Verified college community access only</p>
               </div>
             </div>
           </div>

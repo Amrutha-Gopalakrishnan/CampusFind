@@ -187,7 +187,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
         if (error.message.includes("Invalid login credentials")) {
           warning("Account not found or password incorrect. Please sign up first if you haven't created an account.", 'Account Not Found');
         } else if (error.message.includes("Email not confirmed")) {
-          warning("Please disable email verification in Supabase dashboard and try again.", 'Email Verification Required');
+          warning("Please check your email and click the verification link to confirm your account before logging in.", 'Email Verification Required');
         } else if (error.status === 400) {
           warning("Account not found. Please sign up first to create your account.", 'Sign Up Required');
         } else {
@@ -239,7 +239,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
         if (error.message.includes("Invalid login credentials")) {
           warning("Account not found or password incorrect. Please sign up first if you haven't created an account.", 'Account Not Found');
         } else if (error.message.includes("Email not confirmed")) {
-          warning("Please disable email verification in Supabase dashboard and try again.", 'Email Verification Required');
+          warning("Please check your email and click the verification link to confirm your account before logging in.", 'Email Verification Required');
         } else if (error.status === 400) {
           warning("Account not found. Please sign up first to create your account.", 'Sign Up Required');
         } else {
@@ -282,14 +282,45 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
     }
 
     try {
+      // Sign up with email verification
       const signupResult = await supabase.auth.signUp({
         email: studentSignupData.collegeEmail,
         password: studentSignupData.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/verified`,
+          data: {
+            full_name: studentSignupData.name,
+            reg_number: studentSignupData.regNo,
+            dept_year: studentSignupData.deptYear,
+            role: 'Student'
+          }
+        }
       });
       const { data: signupData, error: signupError } = signupResult;
 
       if (signupError) {
         error("Signup failed: " + signupError.message, 'Signup Failed');
+        setLoading(false);
+        return;
+      }
+
+      // If email verification is required (user exists but no session)
+      if (signupData.user && !signupData.session) {
+        info("Verification link has been sent to your registered email. Please check your inbox and verify your email before logging in.", 'Verification Email Sent');
+        
+        // Store pending profile data for profile creation after verification
+        localStorage.setItem('pending_profile', JSON.stringify({
+          user_id: signupData.user.id,
+          email: studentSignupData.collegeEmail,
+          name: studentSignupData.name,
+          role: 'Student',
+          department: studentSignupData.deptYear,
+          reg_number: studentSignupData.regNo,
+          dept_year: studentSignupData.deptYear
+        }));
+        
+        resetForms();
+        setFormType('login'); // Switch to login tab
         setLoading(false);
         return;
       }
@@ -327,7 +358,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
 
       if (loginError) {
         if (loginError.message && loginError.message.includes('Email not confirmed')) {
-          warning("Account created successfully! Please disable email verification in Supabase dashboard and try logging in manually.", 'Account Created');
+          warning("Please disable email verification in Supabase dashboard and try again.", 'Email Verification Required');
         } else {
           success("Signup successful! Please login manually.", 'Signup Success');
         }
@@ -409,7 +440,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
 
       if (loginError) {
         if (loginError.message && loginError.message.includes('Email not confirmed')) {
-          warning("Account created successfully! Please disable email verification in Supabase dashboard and try logging in manually.", 'Account Created');
+          warning("Please disable email verification in Supabase dashboard and try again.", 'Email Verification Required');
         } else {
           success("Signup successful! Please login manually.", 'Signup Success');
         }

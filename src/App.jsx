@@ -13,6 +13,9 @@ import Lost from "./Lost";
 import ReportFound from "./ReportFound";
 import Status from "./Status";
 import NotFound from "./NotFound";
+import Verified from "./Verified";
+import ForgotPassword from "./ForgotPassword";
+import ResetPassword from "./ResetPassword";
 import { supabase, handleAuthError } from "./supabaseClient";
 
 // Private Route wrapper
@@ -99,9 +102,10 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("App: Auth state changed:", event, session?.user);
       
-      if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-        setUser(session?.user || null);
-      } else if (event === 'SIGNED_IN') {
+      // Handle all auth events including SIGNED_IN, SIGNED_OUT, TOKEN_REFRESHED, etc.
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
         setUser(session?.user || null);
       }
     });
@@ -160,6 +164,11 @@ function App() {
           {/* Login & Signup */}
           <Route path="/login" element={<LogSignup initialTab="login" setUser={setUser} />} />
           <Route path="/signup" element={<LogSignup initialTab="signup" setUser={setUser} />} />
+
+          {/* Email Verification & Password Reset */}
+          <Route path="/verified" element={<Verified />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Fallback - Handle any unmatched routes */}
           <Route path="*" element={<NotFound />} />

@@ -35,3 +35,41 @@ button:hover {
 button:active {
   transform: translateY(0);
 }
+
+/* Hero illustration floating animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-delay {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float-delay 3s ease-in-out infinite 0.5s;
+}
+
+/* Hero dash animation */
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+.animate-dash {
+  animation: dash 2s linear infinite;
+}

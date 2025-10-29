@@ -1,7 +1,7 @@
 import React from 'react'
 import { FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { Search, ClipboardList, Shield, CheckCircle, Sparkles, Zap, Users, Clock } from 'lucide-react';
+import { Search, Shield, CheckCircle, Sparkles, Zap, Users, Clock } from 'lucide-react';
 
 const Hero = () => {
   return (

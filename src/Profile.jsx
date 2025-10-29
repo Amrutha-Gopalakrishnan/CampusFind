@@ -309,7 +309,6 @@ export default function Profile({ user }) {
       setProfile(prev => ({ ...prev, avatar_url: uploadResult.publicUrl }));
       
       // Save to database
-      console.log('Saving avatar URL to database:', uploadResult.publicUrl);
       const { error: updateError } = await supabase.rpc('update_user_profile', {
         new_full_name: profile.fullName,
         new_department: profile.department || null,
@@ -326,14 +325,12 @@ export default function Profile({ user }) {
         return;
       }
 
-      console.log('Avatar URL saved to database successfully');
       success('Avatar updated successfully!', 'Success');
       
       // Verify the avatar URL was saved correctly
       const { data: verifyData, error: verifyError } = await supabase.rpc('get_user_profile');
       if (!verifyError && verifyData && verifyData.length > 0) {
         const savedProfile = verifyData[0];
-        console.log('Avatar verification - saved avatar_url:', savedProfile.avatar_url);
         
         // Update local state with verified data
         setProfile(prev => ({ ...prev, avatar_url: savedProfile.avatar_url }));
