@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
-import { Mail, Lock, User, GraduationCap, Building, Phone, Eye, EyeOff, Sparkles, CheckCircle, AlertCircle, Home } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  User,
+  GraduationCap,
+  Building,
+  Eye,
+  EyeOff,
+  Sparkles,
+  CheckCircle,
+  AlertCircle,
+  Home,
+} from "lucide-react";
 import { useAlert, CustomAlert } from "./CustomAlert";
 import { toast } from "react-toastify";
 
@@ -18,24 +30,46 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   const navigate = useNavigate();
 
   // Student forms
-  const [studentLoginData, setStudentLoginData] = useState({ regNo: "", email: "", password: "" });
-  const [studentSignupData, setStudentSignupData] = useState({ name: "", regNo: "", deptYear: "", collegeEmail: "", password: "" });
+  const [studentLoginData, setStudentLoginData] = useState({
+    regNo: "",
+    email: "",
+    password: "",
+  });
+  const [studentSignupData, setStudentSignupData] = useState({
+    name: "",
+    regNo: "",
+    deptYear: "",
+    collegeEmail: "",
+    password: "",
+  });
 
   // Faculty forms
-  const [facultyLoginData, setFacultyLoginData] = useState({ collegeEmail: "", password: "" });
-  const [facultySignupData, setFacultySignupData] = useState({ name: "", department: "", collegeEmail: "", password: "" });
+  const [facultyLoginData, setFacultyLoginData] = useState({
+    collegeEmail: "",
+    password: "",
+  });
+  const [facultySignupData, setFacultySignupData] = useState({
+    name: "",
+    department: "",
+    collegeEmail: "",
+    password: "",
+  });
 
   const [errors, setErrors] = useState({});
+
+  // Place near top of component (immediately inside LogSignup)
+  const redirectTo = `${window.location.origin}/verified`;
 
   // Check auth state on mount
   useEffect(() => {
     checkAuthState();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+      // update local state when auth changes
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         if (session?.user) {
           setIsLoggedIn(true);
           setLoggedInUser(session.user);
-          await fetchUserProfile(session.user.id);
+          await fetchUserProfile();
         }
       } else if (event === "SIGNED_OUT") {
         setIsLoggedIn(false);
@@ -43,23 +77,57 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
         setUserProfile(null);
       }
     });
-    return () => subscription.unsubscribe();
+
+    // cleanup
+    return () => {
+      try {
+        data?.subscription?.unsubscribe();
+      } catch (e) {
+        // ignore cleanup errors
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkAuthState = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-      setIsLoggedIn(true);
-      setLoggedInUser(session.user);
-      await fetchUserProfile(session.user.id);
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.user) {
+        setIsLoggedIn(true);
+        setLoggedInUser(session.user);
+        await fetchUserProfile();
+      }
+    } catch (err) {
+      console.error("checkAuthState error:", err);
     }
   };
 
-  const fetchUserProfile = async (uid) => {
+  const fetchUserProfile = async () => {
     try {
-      const { data, error } = await supabase.rpc('get_user_profile');
+      // get_user_profile is a SECURITY DEFINER function that uses auth.uid()
+      // ensure session exists before calling it (RLS-safe)
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.user) {
+        // no session — nothing to fetch
+        return;
+      }
+
+      const { data, error } = await supabase.rpc("get_user_profile");
       if (error) {
-        console.error("Error fetching profile:", error);
+        // show lightweight warning for permission issues but don't crash the UI
+        console.error("Error fetching profile (rpc get_user_profile):", error);
+        if (error.status === 403) {
+          warning(
+            "Unable to fetch profile due to database permissions. Please contact admin.",
+            "Permission Denied"
+          );
+          return;
+        }
         return;
       }
       if (data && data.length > 0) {
@@ -71,8 +139,10 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   };
 
   // Email validation
-  const validateStudentEmail = (email) => /^[0-9]+@srcas\.ac\.in$/.test(email);
+  const validateStudentEmail = (email) =>
+    /^[0-9]+@srcas\.ac\.in$/.test(email);
   const validateFacultyEmail = (email) => {
+    if (!email) return false;
     // Special test email for faculty access
     if (email === "ammugopal1116@gmail.com") {
       return true;
@@ -111,10 +181,10 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   };
 
   // Form validation function
-  const validateForm = (data, formType) => {
+  const validateForm = (data, type) => {
     const newErrors = {};
 
-    if (formType === "studentLogin") {
+    if (type === "studentLogin") {
       if (!data.email) newErrors.email = "Email is required";
       else if (!validateStudentEmail(data.email)) {
         newErrors.email = "Student email must be in format: numbers@srcas.ac.in";
@@ -122,35 +192,41 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
       if (!data.password) newErrors.password = "Password is required";
     }
 
-    if (formType === "facultyLogin") {
+    if (type === "facultyLogin") {
       if (!data.collegeEmail) newErrors.collegeEmail = "Email is required";
       else if (!validateFacultyEmail(data.collegeEmail)) {
-        newErrors.collegeEmail = "Faculty email must be in format: letters@srcas.ac.in";
+        newErrors.collegeEmail =
+          "Faculty email must be in format: letters@srcas.ac.in";
       }
       if (!data.password) newErrors.password = "Password is required";
     }
 
-    if (formType === "studentSignup") {
+    if (type === "studentSignup") {
       if (!data.name) newErrors.name = "Name is required";
       if (!data.regNo) newErrors.regNo = "Register number is required";
-      if (!data.deptYear) newErrors.deptYear = "Department & Year is required";
+      if (!data.deptYear) newErrors.deptYear =
+        "Department & Year is required";
       if (!data.collegeEmail) newErrors.collegeEmail = "Email is required";
       else if (!validateStudentEmail(data.collegeEmail)) {
-        newErrors.collegeEmail = "Student email must be in format: numbers@srcas.ac.in";
+        newErrors.collegeEmail =
+          "Student email must be in format: numbers@srcas.ac.in";
       }
       if (!data.password) newErrors.password = "Password is required";
-      else if (data.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+      else if (data.password.length < 6)
+        newErrors.password = "Password must be at least 6 characters";
     }
 
-    if (formType === "facultySignup") {
+    if (type === "facultySignup") {
       if (!data.name) newErrors.name = "Name is required";
       if (!data.department) newErrors.department = "Department is required";
       if (!data.collegeEmail) newErrors.collegeEmail = "Email is required";
       else if (!validateFacultyEmail(data.collegeEmail)) {
-        newErrors.collegeEmail = "Faculty email must be in format: letters@srcas.ac.in";
+        newErrors.collegeEmail =
+          "Faculty email must be in format: letters@srcas.ac.in";
       }
       if (!data.password) newErrors.password = "Password is required";
-      else if (data.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+      else if (data.password.length < 6)
+        newErrors.password = "Password must be at least 6 characters";
     }
 
     return newErrors;
@@ -159,7 +235,13 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   // Reset all forms
   const resetForms = () => {
     setStudentLoginData({ regNo: "", email: "", password: "" });
-    setStudentSignupData({ name: "", regNo: "", deptYear: "", collegeEmail: "", password: "" });
+    setStudentSignupData({
+      name: "",
+      regNo: "",
+      deptYear: "",
+      collegeEmail: "",
+      password: "",
+    });
     setFacultyLoginData({ collegeEmail: "", password: "" });
     setFacultySignupData({ name: "", department: "", collegeEmail: "", password: "" });
     setErrors({});
@@ -169,7 +251,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   const handleStudentLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const newErrors = validateForm(studentLoginData, "studentLogin");
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -178,40 +260,45 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: studentLoginData.email,
         password: studentLoginData.password,
       });
 
-      if (error) {
-        if (error.message.includes("Invalid login credentials")) {
-          warning("Account not found or password incorrect. Please sign up first if you haven't created an account.", 'Account Not Found');
-        } else if (error.message.includes("Email not confirmed")) {
-          warning("Please check your email and click the verification link to confirm your account before logging in.", 'Email Verification Required');
-        } else if (error.status === 400) {
-          warning("Account not found. Please sign up first to create your account.", 'Sign Up Required');
+      if (signInError) {
+        console.error("Student login error:", signInError);
+        if (signInError.message?.includes("Invalid login credentials")) {
+          warning(
+            "Account not found or password incorrect. Please sign up first if you haven't created an account.",
+            "Account Not Found"
+          );
+        } else if (signInError.message?.includes("Email not confirmed")) {
+          warning(
+            "Please check your email and click the verification link to confirm your account before logging in.",
+            "Email Verification Required"
+          );
+        } else if (signInError.status === 400) {
+          warning("Account not found. Please sign up first to create your account.", "Sign Up Required");
         } else {
-          error("Login failed: " + error.message, 'Login Failed');
+          error("Login failed: " + signInError.message, "Login Failed");
         }
         setLoading(false);
         return;
       }
 
-      if (data.user) {
+      if (data?.user) {
         setIsLoggedIn(true);
         setLoggedInUser(data.user);
-        if (setUser) {
-          setUser(data.user);
-        }
-        await fetchUserProfile(data.user.id);
-        success("Student login successful!", 'Login Success');
+        if (setUser) setUser(data.user);
+        await fetchUserProfile();
+        success("Student login successful!", "Login Success");
         navigate("/dashboard");
       } else {
-        error("Login failed: No user data received", 'Login Failed');
+        error("Login failed: No user data received", "Login Failed");
       }
     } catch (err) {
       console.error("Login error:", err);
-      error("Login failed. Please try again.", 'Login Failed');
+      error("Login failed. Please try again.", "Login Failed");
     } finally {
       setLoading(false);
     }
@@ -221,7 +308,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   const handleFacultyLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const newErrors = validateForm(facultyLoginData, "facultyLogin");
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -230,40 +317,45 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: facultyLoginData.collegeEmail,
         password: facultyLoginData.password,
       });
 
-      if (error) {
-        if (error.message.includes("Invalid login credentials")) {
-          warning("Account not found or password incorrect. Please sign up first if you haven't created an account.", 'Account Not Found');
-        } else if (error.message.includes("Email not confirmed")) {
-          warning("Please check your email and click the verification link to confirm your account before logging in.", 'Email Verification Required');
-        } else if (error.status === 400) {
-          warning("Account not found. Please sign up first to create your account.", 'Sign Up Required');
+      if (signInError) {
+        console.error("Faculty login error:", signInError);
+        if (signInError.message?.includes("Invalid login credentials")) {
+          warning(
+            "Account not found or password incorrect. Please sign up first if you haven't created an account.",
+            "Account Not Found"
+          );
+        } else if (signInError.message?.includes("Email not confirmed")) {
+          warning(
+            "Please check your email and click the verification link to confirm your account before logging in.",
+            "Email Verification Required"
+          );
+        } else if (signInError.status === 400) {
+          warning("Account not found. Please sign up first to create your account.", "Sign Up Required");
         } else {
-          error("Login failed: " + error.message, 'Login Failed');
+          error("Login failed: " + signInError.message, "Login Failed");
         }
         setLoading(false);
         return;
       }
 
-      if (data.user) {
+      if (data?.user) {
         setIsLoggedIn(true);
         setLoggedInUser(data.user);
-        if (setUser) {
-          setUser(data.user);
-        }
-        await fetchUserProfile(data.user.id);
-        success("Faculty login successful!", 'Login Success');
+        if (setUser) setUser(data.user);
+        await fetchUserProfile();
+        success("Faculty login successful!", "Login Success");
         navigate("/dashboard");
       } else {
-        error("Login failed: No user data received", 'Login Failed');
+        error("Login failed: No user data received", "Login Failed");
       }
     } catch (err) {
       console.error("Faculty login error:", err);
-      error("Login failed. Please try again.", 'Login Failed');
+      error("Login failed. Please try again.", "Login Failed");
     } finally {
       setLoading(false);
     }
@@ -273,7 +365,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   const handleStudentSignupSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const newErrors = validateForm(studentSignupData, "studentSignup");
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -282,97 +374,110 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
     }
 
     try {
-      // Sign up with email verification
-      const signupResult = await supabase.auth.signUp({
+      // use current origin so verification link always comes back to this environment
+
+      await supabase.auth.signOut();
+      localStorage.clear();     
+
+      const { data: signupData, error: signupError } = await supabase.auth.signUp({
         email: studentSignupData.collegeEmail,
         password: studentSignupData.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/verified`,
+          emailRedirectTo: window.location.origin,
           data: {
             full_name: studentSignupData.name,
             reg_number: studentSignupData.regNo,
             dept_year: studentSignupData.deptYear,
-            role: 'Student'
-          }
-        }
+            role: "Student",
+          },
+        },
       });
-      const { data: signupData, error: signupError } = signupResult;
 
       if (signupError) {
-        error("Signup failed: " + signupError.message, 'Signup Failed');
+        console.error("Student signUp error:", signupError);
+        error("Signup failed: " + signupError.message, "Signup Failed");
         setLoading(false);
         return;
       }
 
-      // If email verification is required (user exists but no session)
-      if (signupData.user && !signupData.session) {
-        info("Verification link has been sent to your registered email. Please check your inbox and verify your email before logging in.", 'Verification Email Sent');
-        
-        // Store pending profile data for profile creation after verification
-        localStorage.setItem('pending_profile', JSON.stringify({
-          user_id: signupData.user.id,
-          email: studentSignupData.collegeEmail,
-          name: studentSignupData.name,
-          role: 'Student',
-          department: studentSignupData.deptYear,
-          reg_number: studentSignupData.regNo,
-          dept_year: studentSignupData.deptYear
-        }));
-        
+      // If sign up returned a user but no session, it means verification is required.
+      if (signupData?.user && !signupData?.session) {
+        info(
+          "Verification link has been sent to your registered email. Please check your inbox and verify your email before logging in.",
+          "Verification Email Sent"
+        );
+
+        // store pending profile (will be read on /verified page)
+        localStorage.setItem(
+          "pending_profile",
+          JSON.stringify({
+            user_id: signupData.user.id,
+            email: studentSignupData.collegeEmail,
+            name: studentSignupData.name,
+            role: "Student",
+            department: studentSignupData.deptYear,
+            reg_number: studentSignupData.regNo,
+            dept_year: studentSignupData.deptYear,
+          })
+        );
+
         resetForms();
-        setFormType('login'); // Switch to login tab
+        setFormType("login");
         setLoading(false);
         return;
       }
 
-      if (signupData.user) {
-        const { error: profileError } = await supabase.rpc('create_user_profile', {
+      // If we have a user and a session (rare if verification disabled), create profile immediately
+      if (signupData?.user) {
+        const { error: profileError } = await supabase.rpc("create_user_profile", {
           user_id: signupData.user.id,
           user_email: studentSignupData.collegeEmail,
           user_name: studentSignupData.name,
-          user_role: 'Student',
+          user_role: "Student",
           user_department: studentSignupData.deptYear,
           user_reg_number: studentSignupData.regNo,
           user_dept_year: studentSignupData.deptYear,
           user_phone: null,
           user_alt_phone: null,
-          user_avatar_url: null
+          user_avatar_url: null,
         });
 
-        if (profileError) {
-          if (profileError.code === '23505') {
-            console.log("Profile already exists, continuing...");
+        if (profileError && profileError.code !== "23505") {
+          console.error("Profile creation failed:", profileError);
+          error("Profile creation failed: " + profileError.message, "Profile Creation Failed");
+          setLoading(false);
+          return;
+        }
+      }
+
+      // try to sign in automatically if session present
+      try {
+        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+          email: studentSignupData.collegeEmail,
+          password: studentSignupData.password,
+        });
+
+        if (loginError) {
+          // likely "Email not confirmed" — show info and move on
+          if (loginError.message?.includes("Email not confirmed")) {
+            warning("Please verify your email before logging in.", "Email Verification Required");
           } else {
-            error("Profile creation failed: " + profileError.message, 'Profile Creation Failed');
-            setLoading(false);
-            return;
+            success("Signup successful! Please login manually.", "Signup Success");
           }
+        } else if (loginData?.user) {
+          setIsLoggedIn(true);
+          setLoggedInUser(loginData.user);
+          if (setUser) setUser(loginData.user);
+          await fetchUserProfile();
+          success("Student signup and login successful!", "Signup Success");
+          navigate("/dashboard");
+          return;
         }
+      } catch (e) {
+        console.error("Auto-login after signup error:", e);
       }
 
-      const loginResult = await supabase.auth.signInWithPassword({
-        email: studentSignupData.collegeEmail,
-        password: studentSignupData.password,
-      });
-      const { data: loginData, error: loginError } = loginResult;
-
-      if (loginError) {
-        if (loginError.message && loginError.message.includes('Email not confirmed')) {
-          warning("Please disable email verification in Supabase dashboard and try again.", 'Email Verification Required');
-        } else {
-          success("Signup successful! Please login manually.", 'Signup Success');
-        }
-      } else if (loginData.user) {
-        setIsLoggedIn(true);
-        setLoggedInUser(loginData.user);
-        if (setUser) setUser(loginData.user);
-        await fetchUserProfile(loginData.user.id);
-        success("Student signup and login successful!", 'Signup Success');
-        navigate("/dashboard");
-        return;
-      }
-
-      success("Student signup successful! You can now login.", 'Signup Success');
+      success("Student signup successful! You can now login.", "Signup Success");
       resetForms();
     } catch (err) {
       console.error("Signup error:", err);
@@ -386,7 +491,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
   const handleFacultySignupSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     const newErrors = validateForm(facultySignupData, "facultySignup");
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -395,66 +500,105 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
     }
 
     try {
-      const signupResult = await supabase.auth.signUp({
+
+      await supabase.auth.signOut();
+      localStorage.clear();
+
+      const { data: signupData, error: signupError } = await supabase.auth.signUp({
         email: facultySignupData.collegeEmail,
         password: facultySignupData.password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: {
+            full_name: facultySignupData.name,
+            role: "Faculty",
+            department: facultySignupData.department,
+          },
+        },
       });
-      const { data: signupData, error: signupError } = signupResult;
 
       if (signupError) {
-        error("Signup failed: " + signupError.message, 'Signup Failed');
+        console.error("Faculty signUp error:", signupError);
+        error("Signup failed: " + signupError.message, "Signup Failed");
         setLoading(false);
         return;
       }
 
-      if (signupData.user) {
-        const { error: profileError } = await supabase.rpc('create_user_profile', {
+      // If sign up returned a user but no session, verification required
+      if (signupData?.user && !signupData?.session) {
+        info(
+          "Verification link has been sent to your registered email. Please check your inbox and verify your email before logging in.",
+          "Verification Email Sent"
+        );
+
+        // store pending profile
+        localStorage.setItem(
+          "pending_profile",
+          JSON.stringify({
+            user_id: signupData.user.id,
+            email: facultySignupData.collegeEmail,
+            name: facultySignupData.name,
+            role: "Faculty",
+            department: facultySignupData.department,
+          })
+        );
+
+        resetForms();
+        setFormType("login");
+        setLoading(false);
+        return;
+      }
+
+      // If session present (verification disabled), create profile immediately
+      if (signupData?.user) {
+        const { error: profileError } = await supabase.rpc("create_user_profile", {
           user_id: signupData.user.id,
           user_email: facultySignupData.collegeEmail,
           user_name: facultySignupData.name,
-          user_role: 'Faculty',
+          user_role: "Faculty",
           user_department: facultySignupData.department,
           user_reg_number: null,
           user_dept_year: null,
           user_phone: null,
           user_alt_phone: null,
-          user_avatar_url: null
+          user_avatar_url: null,
         });
 
-        if (profileError) {
-          if (profileError.code === '23505') {
-            console.log("Profile already exists, continuing...");
+        if (profileError && profileError.code !== "23505") {
+          console.error("Faculty profile creation failed:", profileError);
+          error("Profile creation failed: " + profileError.message, "Profile Creation Failed");
+          setLoading(false);
+          return;
+        }
+      }
+
+      // try auto sign-in if possible
+      try {
+        const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+          email: facultySignupData.collegeEmail,
+          password: facultySignupData.password,
+        });
+
+        if (loginError) {
+          if (loginError.message?.includes("Email not confirmed")) {
+            warning("Please verify your email before logging in.", "Email Verification Required");
           } else {
-            error("Profile creation failed: " + profileError.message, 'Profile Creation Failed');
-            setLoading(false);
-            return;
+            success("Signup successful! Please login manually.", "Signup Success");
           }
+        } else if (loginData?.user) {
+          setIsLoggedIn(true);
+          setLoggedInUser(loginData.user);
+          if (setUser) setUser(loginData.user);
+          await fetchUserProfile();
+          success("Faculty signup and login successful!", "Signup Success");
+          navigate("/dashboard");
+          return;
         }
+      } catch (e) {
+        console.error("Auto-login after faculty signup error:", e);
       }
 
-      const loginResult = await supabase.auth.signInWithPassword({
-        email: facultySignupData.collegeEmail,
-        password: facultySignupData.password,
-      });
-      const { data: loginData, error: loginError } = loginResult;
-
-      if (loginError) {
-        if (loginError.message && loginError.message.includes('Email not confirmed')) {
-          warning("Please disable email verification in Supabase dashboard and try again.", 'Email Verification Required');
-        } else {
-          success("Signup successful! Please login manually.", 'Signup Success');
-        }
-      } else if (loginData.user) {
-        setIsLoggedIn(true);
-        setLoggedInUser(loginData.user);
-        if (setUser) setUser(loginData.user);
-        await fetchUserProfile(loginData.user.id);
-        success("Faculty signup and login successful!", 'Signup Success');
-        navigate("/dashboard");
-        return;
-      }
-
-      success("Faculty signup successful! You can now login.", 'Signup Success');
+      success("Faculty signup successful! You can now login.", "Signup Success");
       resetForms();
     } catch (err) {
       console.error("Signup error:", err);
@@ -471,7 +615,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
     setLoggedInUser(null);
     setUserProfile(null);
     resetForms();
-    success("Logged out successfully!", 'Logout Success');
+    success("Logged out successfully!", "Logout Success");
   };
 
   // If user is logged in, show logged-in card
@@ -488,26 +632,26 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
             <div className="bg-gray-50 rounded-2xl p-4 mb-6 text-left">
               <p className="text-gray-700 mb-1"><strong>Name:</strong> {userProfile.full_name}</p>
               <p className="text-gray-700 mb-1"><strong>Role:</strong> {userProfile.role}</p>
-              {userProfile.role === 'Student' && (
+              {userProfile.role === "Student" && (
                 <>
                   <p className="text-gray-700 mb-1"><strong>Reg Number:</strong> {userProfile.reg_number}</p>
                   <p className="text-gray-700 mb-1"><strong>Department:</strong> {userProfile.dept_year}</p>
                 </>
               )}
-              {userProfile.role === 'Faculty' && (
+              {userProfile.role === "Faculty" && (
                 <p className="text-gray-700 mb-1"><strong>Department:</strong> {userProfile.department}</p>
               )}
             </div>
           )}
           <div className="space-y-3">
-            <button 
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105" 
+            <button
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
               onClick={() => navigate("/dashboard")}
             >
               Go to Dashboard
             </button>
-            <button 
-              className="w-full py-3 rounded-2xl bg-gradient-to-r from-gray-500 to-gray-600 text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105" 
+            <button
+              className="w-full py-3 rounded-2xl bg-gradient-to-r from-gray-500 to-gray-600 text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
               onClick={handleLogout}
             >
               Log Out
@@ -518,6 +662,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
     );
   }
 
+  // Main UI (login/signup)
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 py-12 px-4">
       {/* Custom Alert Component */}
@@ -529,7 +674,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
         duration={alert.duration}
         onClose={hideAlert}
       />
-      
+
       <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
         {/* Header */}
         <div className="flex flex-col items-center mb-8">
@@ -540,7 +685,7 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
           <p className="text-center text-gray-600 font-medium text-sm">
             A secure platform for students to report and reclaim lost belongings.
           </p>
-          
+
           {/* Home Button */}
           <button
             onClick={() => navigate("/")}
@@ -556,8 +701,8 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
           <button
             onClick={() => setUserType("student")}
             className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
-              userType === "student" 
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" 
+              userType === "student"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
                 : "text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -569,8 +714,8 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
           <button
             onClick={() => setUserType("faculty")}
             className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
-              userType === "faculty" 
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" 
+              userType === "faculty"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
                 : "text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -586,8 +731,8 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
           <button
             onClick={() => setFormType("login")}
             className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
-              formType === "login" 
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" 
+              formType === "login"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
                 : "text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -596,8 +741,8 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
           <button
             onClick={() => setFormType("signup")}
             className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
-              formType === "signup" 
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" 
+              formType === "signup"
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
                 : "text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -626,10 +771,12 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.regNo && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.regNo}
-                  </p>}
+                  {errors.regNo && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.regNo}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">College Email</label>
@@ -647,10 +794,12 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.email && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.email}
-                  </p>}
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Password</label>
@@ -675,18 +824,18 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
-                  {errors.password && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.password}
-                  </p>}
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
                   className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
-                    loading 
-                      ? "bg-gray-400 cursor-not-allowed" 
-                      : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   } text-white`}
                 >
                   {loading ? "Logging in..." : "Student Login"}
@@ -710,11 +859,14 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.name && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.name}
-                  </p>}
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.name}
+                    </p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Register Number</label>
                   <div className="relative">
@@ -731,11 +883,14 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <GraduationCap className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.regNo && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.regNo}
-                  </p>}
+                  {errors.regNo && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.regNo}
+                    </p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Department & Year</label>
                   <div className="relative">
@@ -752,11 +907,14 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <Building className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.deptYear && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.deptYear}
-                  </p>}
+                  {errors.deptYear && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.deptYear}
+                    </p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">College Email</label>
                   <div className="relative">
@@ -773,11 +931,14 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.collegeEmail && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.collegeEmail}
-                  </p>}
+                  {errors.collegeEmail && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.collegeEmail}
+                    </p>
+                  )}
                 </div>
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Password</label>
                   <div className="relative">
@@ -801,18 +962,19 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
-                  {errors.password && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.password}
-                  </p>}
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
+
                 <button
                   type="submit"
                   disabled={loading}
                   className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
-                    loading 
-                      ? "bg-gray-400 cursor-not-allowed" 
-                      : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   } text-white`}
                 >
                   {loading ? "Creating Account..." : "Student SignUp"}
@@ -840,10 +1002,12 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.collegeEmail && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.collegeEmail}
-                  </p>}
+                  {errors.collegeEmail && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.collegeEmail}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Password</label>
@@ -868,18 +1032,18 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
-                  {errors.password && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.password}
-                  </p>}
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
                   className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
-                    loading 
-                      ? "bg-gray-400 cursor-not-allowed" 
-                      : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   } text-white`}
                 >
                   {loading ? "Logging in..." : "Faculty Login"}
@@ -903,10 +1067,12 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <User className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.name && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.name}
-                  </p>}
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.name}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Department</label>
@@ -924,10 +1090,12 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <Building className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.department && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.department}
-                  </p>}
+                  {errors.department && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.department}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">College Email</label>
@@ -945,10 +1113,12 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                     />
                     <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   </div>
-                  {errors.collegeEmail && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.collegeEmail}
-                  </p>}
+                  {errors.collegeEmail && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.collegeEmail}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Password</label>
@@ -973,18 +1143,18 @@ const LogSignup = ({ initialTab = "login", setUser }) => {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
-                  {errors.password && <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.password}
-                  </p>}
+                  {errors.password && (
+                    <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.password}
+                    </p>
+                  )}
                 </div>
                 <button
                   type="submit"
                   disabled={loading}
                   className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
-                    loading 
-                      ? "bg-gray-400 cursor-not-allowed" 
-                      : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                    loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   } text-white`}
                 >
                   {loading ? "Creating Account..." : "Faculty SignUp"}

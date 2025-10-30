@@ -13,9 +13,6 @@ import Lost from "./Lost";
 import ReportFound from "./ReportFound";
 import Status from "./Status";
 import NotFound from "./NotFound";
-import Verified from "./Verified";
-import ForgotPassword from "./ForgotPassword";
-import ResetPassword from "./ResetPassword";
 import { supabase, handleAuthError } from "./supabaseClient";
 
 // Private Route wrapper
@@ -164,11 +161,6 @@ function App() {
           {/* Login & Signup */}
           <Route path="/login" element={<LogSignup initialTab="login" setUser={setUser} />} />
           <Route path="/signup" element={<LogSignup initialTab="signup" setUser={setUser} />} />
-
-          {/* Email Verification & Password Reset */}
-          <Route path="/verified" element={<Verified />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Fallback - Handle any unmatched routes */}
           <Route path="*" element={<NotFound />} />
