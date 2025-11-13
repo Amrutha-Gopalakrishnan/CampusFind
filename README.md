@@ -97,7 +97,7 @@ CampusFind/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Amrutha-Gopalakrishnan/BelongiFy.git
+   git clone https://github.com/Amrutha-Gopalakrishnan/CampusFind.git
    cd CampusFind
    ```
 
