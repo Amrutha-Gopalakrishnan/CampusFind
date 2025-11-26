@@ -255,7 +255,7 @@ const LogSignup = () => {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="mt-4 px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+            className="mt-4 px-6 py-2 text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
           >
             <Home className="w-4 h-4" />
             Back to Home
@@ -270,7 +270,7 @@ const LogSignup = () => {
               onClick={() => setUserType(type)}
               className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
                 userType === type
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                  ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -297,7 +297,7 @@ const LogSignup = () => {
               onClick={() => setFormType(type)}
               className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
                 formType === type
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                  ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -571,10 +571,10 @@ const LogSignup = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
+              className={`w-full py-4 mt-6 text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
                 loading
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  : "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90"
               } text-white`}
             >
               {loading ? "Creating Account..." : "Sign Up"}
@@ -601,7 +601,7 @@ const LogSignup = () => {
             />
             <button
               onClick={handleVerifyOtp}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-2 rounded-lg hover:scale-105 transition-all"
+              className="w-full text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90 font-semibold py-2 rounded-lg hover:scale-105 transition-all"
             >
               Verify OTP
             </button>

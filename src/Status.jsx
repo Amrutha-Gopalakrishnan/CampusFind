@@ -199,7 +199,7 @@ export default function Status({ user, setUser }) {
               </button>
               <button
                 onClick={() => (window.location.href = "/dashboard")}
-                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                className="px-4 py-2 text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 shadow-lg  rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
               >
                 Dashboard
                 <ArrowRight className="w-4 h-4" />
@@ -217,7 +217,7 @@ export default function Status({ user, setUser }) {
                 onClick={() => setTab("lost")}
                 className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 ${
                   tab === "lost"
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                    ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 shadow-lg shadow-lg"
                     : "bg-white/80 text-gray-700 border border-gray-200 hover:border-blue-300 hover:bg-blue-50"
                 }`}
               >
@@ -227,7 +227,7 @@ export default function Status({ user, setUser }) {
                 onClick={() => setTab("found")}
                 className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 ${
                   tab === "found"
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
+                    ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 shadow-lg shadow-lg"
                     : "bg-white/80 text-gray-700 border border-gray-200 hover:border-blue-300 hover:bg-blue-50"
                 }`}
               >

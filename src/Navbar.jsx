@@ -1,7 +1,8 @@
 import React, { memo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, Sparkles, ArrowRight, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, X, ArrowRight, LogOut, LayoutDashboard } from "lucide-react";
 import { supabase } from "./supabaseClient";
+import logo from './assets/logo.png'
 
 const Navbar = memo(({ user, setUser }) => {
   const navigate = useNavigate();
@@ -14,17 +15,25 @@ const Navbar = memo(({ user, setUser }) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
-      <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <header className="sticky top-0 z-50 bg-white/50 backdrop-blur-2xl border-b border-white/40 shadow-[0_4px_30px_rgba(0,0,0,0.05)] font-[Inter]">
+      <nav className="max-w-6xl mx-auto px-3 py-3 flex justify-between items-center">
         {/* Logo + Title */}
-        <div className="flex items-center gap-3">
+        <div
+          className="flex items-center gap-3 group cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          {/* Custom Logo Image */}
           <div className="relative">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 rounded-xl flex items-center justify-center shadow-lg">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full animate-pulse"></div>
+            <img
+              src={logo}
+              alt="CampusFind Logo"
+              className="w-12 h-12 object-contain rounded-xl shadow-md group-hover:scale-110 transition-transform duration-300"
+            />
+            <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-orange-500 to-amber-400 rounded-full animate-ping"></div>
           </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 bg-clip-text text-transparent tracking-tight">
+
+          {/* Brand Name */}
+          <span className="text-2xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 bg-clip-text text-transparent tracking-tight">
             CampusFind
           </span>
         </div>
@@ -35,42 +44,39 @@ const Navbar = memo(({ user, setUser }) => {
             <>
               <button
                 onClick={() => navigate("/dashboard")}
-                className="group relative px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="px-6 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 hover:opacity-90 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
               >
-                <span className="flex items-center gap-2">
-                  <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
-                </span>
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard
               </button>
+
               <button
                 onClick={handleLogout}
-                className="px-6 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                className="px-6 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 hover:opacity-90 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
               >
-                <span className="flex items-center gap-2">
-                  <LogOut className="w-4 h-4" />
-                  Log Out
-                </span>
+                <LogOut className="w-4 h-4" />
+                Log Out
               </button>
             </>
           ) : (
             <>
               <Link
                 to="/dashboard"
-                className="group relative px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="px-6 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 hover:opacity-90 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2"
               >
-                <span className="flex items-center gap-2">
-                  Get Started
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
+                Get Started
+                <ArrowRight className="w-4 h-4" />
               </Link>
+
               <button
-                className="px-6 py-2.5 rounded-xl font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 border border-gray-200 hover:border-blue-200"
+                className="px-6 py-2.5 rounded-xl font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-50 border border-gray-200 hover:border-blue-200 transition-all duration-300"
                 onClick={() => navigate("/login")}
               >
                 Login
               </button>
+
               <button
-                className="px-6 py-2.5 rounded-xl font-semibold bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border border-purple-200 hover:from-purple-100 hover:to-blue-100 transition-all duration-300"
+                className="px-6 py-2.5 rounded-xl font-semibold text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 hover:scale-105 transition-all duration-300"
                 onClick={() => navigate("/signup")}
               >
                 Sign Up
@@ -81,16 +87,20 @@ const Navbar = memo(({ user, setUser }) => {
 
         {/* Mobile Toggle Button */}
         <button
-          className="md:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors"
+          className="md:hidden p-2 rounded-xl hover:bg-blue-50 transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X size={24} className="text-gray-700" /> : <Menu size={24} className="text-gray-700" />}
+          {isOpen ? (
+            <X size={24} className="text-gray-700" />
+          ) : (
+            <Menu size={24} className="text-gray-700" />
+          )}
         </button>
       </nav>
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200/50 px-6 py-4 space-y-3">
+        <div className="md:hidden bg-white/90 backdrop-blur-xl border-t border-white/30 px-6 py-4 space-y-3 animate-fadeIn">
           {user ? (
             <>
               <button
@@ -98,40 +108,36 @@ const Navbar = memo(({ user, setUser }) => {
                   setIsOpen(false);
                   navigate("/dashboard");
                 }}
-                className="block w-full px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 text-center"
+                className="w-full px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <span className="flex items-center justify-center gap-2">
-                  <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
-                </span>
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard
               </button>
+
               <button
                 onClick={() => {
                   setIsOpen(false);
                   handleLogout();
                 }}
-                className="block w-full px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+                className="w-full px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 hover:opacity-90 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
               >
-                <span className="flex items-center justify-center gap-2">
-                  <LogOut className="w-4 h-4" />
-                  Log Out
-                </span>
+                <LogOut className="w-4 h-4" />
+                Log Out
               </button>
             </>
           ) : (
             <>
               <Link
                 to="/dashboard"
-                className="block w-full px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 text-center"
+                className="w-full px-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
                 onClick={() => setIsOpen(false)}
               >
-                <span className="flex items-center justify-center gap-2">
-                  Get Started
-                  <ArrowRight className="w-4 h-4" />
-                </span>
+                Get Started
+                <ArrowRight className="w-4 h-4" />
               </Link>
+
               <button
-                className="block w-full px-6 py-3 rounded-xl font-semibold text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 border border-gray-200 hover:border-blue-200"
+                className="w-full px-6 py-3 rounded-xl font-semibold text-gray-700 hover:text-blue-700 hover:bg-blue-50 border border-gray-200 hover:border-blue-200 transition-all duration-300"
                 onClick={() => {
                   setIsOpen(false);
                   navigate("/login");
@@ -139,8 +145,9 @@ const Navbar = memo(({ user, setUser }) => {
               >
                 Login
               </button>
+
               <button
-                className="block w-full px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border border-purple-200 hover:from-purple-100 hover:to-blue-100 transition-all duration-300"
+                className="w-full px-6 py-3 rounded-xl font-semibold text-blue-700 bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-all duration-300"
                 onClick={() => {
                   setIsOpen(false);
                   navigate("/signup");

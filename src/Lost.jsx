@@ -428,7 +428,7 @@ export default function ReportLostBelonging({ user, setUser }) {
             <button
               type="submit"
               disabled={uploading}
-              className={`flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 ${
+              className={`flex-1 px-6 py-3 text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-500 shadow-lg hover:shadow-xl transition-all duration-300 font-bold shadow-lg rounded-xl hover:scale-105 flex items-center justify-center gap-2 ${
                 uploading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
