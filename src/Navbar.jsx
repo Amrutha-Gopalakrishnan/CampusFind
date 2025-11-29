@@ -2,7 +2,7 @@ import React, { memo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, ArrowRight, LogOut, LayoutDashboard } from "lucide-react";
 import { supabase } from "./supabaseClient";
-import logo from './assets/logo.png'
+import logo from '/logo.png'
 
 const Navbar = memo(({ user, setUser }) => {
   const navigate = useNavigate();

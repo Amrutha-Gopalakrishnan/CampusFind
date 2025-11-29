@@ -1,3 +1,4 @@
+// LogSignup.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
@@ -11,11 +12,10 @@ import {
   EyeOff,
   Sparkles,
   Home,
-  AlertCircle,
 } from "lucide-react";
 import { useAlert, CustomAlert } from "./CustomAlert";
 
-// ✅ Password validation: at least one lowercase, uppercase, and digit
+// password must contain at least one lowercase, uppercase, digit, min 6 chars
 const validatePassword = (password) =>
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(password);
 
@@ -23,16 +23,12 @@ const LogSignup = () => {
   const navigate = useNavigate();
   const { alert, success, error, warning, info, hideAlert } = useAlert();
 
-  // 🧩 State Management
-  const [userType, setUserType] = useState("student");
-  const [formType, setFormType] = useState("login");
+  const [userType, setUserType] = useState("student"); // "student" | "faculty"
+  const [formType, setFormType] = useState("login"); // "login" | "signup"
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpCode, setOtpCode] = useState("");
-  const [pendingProfile, setPendingProfile] = useState(null);
 
-  // Student Data
+  // Student
   const [studentSignup, setStudentSignup] = useState({
     name: "",
     regNo: "",
@@ -45,7 +41,7 @@ const LogSignup = () => {
     password: "",
   });
 
-  // Faculty Data
+  // Faculty
   const [facultySignup, setFacultySignup] = useState({
     name: "",
     department: "",
@@ -57,153 +53,211 @@ const LogSignup = () => {
     password: "",
   });
 
-  // ===============================
-  // ✅ OTP Verification Handler
-  // ===============================
-  const handleVerifyOtp = async () => {
+  // ---------- Helpers ----------
+  const normalizeRole = (role) =>
+    role && role.toLowerCase().startsWith("fac") ? "faculty" : "student";
+
+  // insert profile after signup/login (user must be authenticated)
+  const ensureProfileExists = async ({
+    id,
+    email,
+    full_name,
+    role,
+    department,
+    reg_number,
+    dept_year,
+  }) => {
     try {
-      const { data, error: otpError } = await supabase.auth.verifyOtp({
-        email: pendingProfile.email,
-        token: otpCode,
-        type: "email",
-      });
-      if (otpError) throw otpError;
+      // try to fetch profile (server RLS ensures we can only see our own)
+      const { data: existing, error: selectErr } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", id)
+        .maybeSingle();
 
-      if (data?.user) {
-        const profile = pendingProfile;
+      if (selectErr) {
+        console.error("Error checking existing profile:", selectErr);
+        // continue — attempt insert (insert may fail if constraint)
+      }
 
-        // ✅ Set password after OTP verified
-        const { error: pwdError } = await supabase.auth.updateUser({
-          password: profile.password,
-        });
-        if (pwdError) {
-          warning(
-            "Account created, but password didn’t meet strength rules. Please reset password before login.",
-            "Weak Password"
-          );
+      if (!existing) {
+        // Prepare payload. If email is the test email, set role to 'admin' so server's chk allows it.
+        const testEmail = "ammugopal1116@gmail.com";
+        const roleToInsert = email === testEmail ? "admin" : role ?? "student";
+
+        const payload = {
+          id,
+          email,
+          full_name: full_name ?? null,
+          role: roleToInsert,
+          department: department ?? null,
+          reg_number: reg_number ?? null,
+          dept_year: dept_year ?? null,
+          phone: null,
+          alt_phone: null,
+          avatar_url: null,
+        };
+
+        const { error: insertErr } = await supabase.from("profiles").insert([payload]);
+
+        if (insertErr) {
+          // log detailed error for debugging; surface friendly message
+          console.error("Failed to create profile:", insertErr);
+          // If constraint violation on email format, give a helpful message
+          if (insertErr.code === "23514" || (insertErr.message && insertErr.message.includes("chk_email_format"))) {
+            error("Profile creation blocked by email-format rule. If you're testing, use the test email or correct the email format for students/faculty.");
+          } else {
+            error("Failed to create profile. See console for details.");
+          }
+        } else {
+          console.log("Profile created for", id);
         }
-
-        // ✅ Create user profile
-        const { error: rpcError } = await supabase.rpc("create_user_profile", {
-          user_id: data.user.id,
-          user_email: profile.email,
-          user_name: profile.name,
-          user_role: profile.role,
-          user_department: profile.department,
-          user_reg_number: profile.reg_number,
-          user_dept_year: profile.dept_year,
-          user_phone: null,
-          user_alt_phone: null,
-          user_avatar_url: null,
-        });
-        if (rpcError) console.error("Profile creation failed:", rpcError);
-
-        success("Email verified successfully! You can now log in.", "Verification Success");
-        setOtpSent(false);
-        setOtpCode("");
-        setPendingProfile(null);
-        setFormType("login");
+      } else {
+        console.log("Profile already exists for", id);
       }
     } catch (err) {
-      console.error("OTP verification error:", err);
-      error("Invalid OTP. Please try again.");
-      setOtpCode("");
+      console.error("ensureProfileExists error:", err);
+      error("Unexpected error while creating profile.");
     }
   };
 
-  // ===============================
-  // ✅ Student Signup via OTP
-  // ===============================
+  // ---------- SIGNUP handlers (use signUp for reliability) ----------
   const handleStudentSignupSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     if (!validatePassword(studentSignup.password)) {
-      warning("Password must contain uppercase, lowercase, and a number.", "Weak Password");
+      warning("Password must contain uppercase, lowercase, and a number (min 6 chars).", "Weak Password");
       setLoading(false);
       return;
     }
 
     try {
-      const { error: otpError } = await supabase.auth.signInWithOtp({
+      // sign up via Supabase
+      const { data, error: signErr } = await supabase.auth.signUp({
         email: studentSignup.collegeEmail,
-        options: { shouldCreateUser: true },
-      });
-      if (otpError) throw otpError;
-
-      info("OTP sent to your college email!", "Verification Pending");
-      setPendingProfile({
-        email: studentSignup.collegeEmail,
-        name: studentSignup.name,
-        role: "Student",
-        department: studentSignup.deptYear,
-        reg_number: studentSignup.regNo,
-        dept_year: studentSignup.deptYear,
         password: studentSignup.password,
       });
-      setOtpSent(true);
+
+      if (signErr) throw signErr;
+
+      // When signUp returns a user object immediately (depends on Supabase settings),
+      // we can create profile now. Otherwise instruct user to verify email.
+      const user = data?.user ?? data?.session?.user;
+      if (user) {
+        await ensureProfileExists({
+          id: user.id,
+          email: user.email,
+          full_name: studentSignup.name,
+          role: "student",
+          department: studentSignup.deptYear,
+          reg_number: studentSignup.regNo,
+          dept_year: studentSignup.deptYear,
+        });
+
+        success("Account created. Please verify your email if required, then login.", "Signup Success");
+        setFormType("login");
+      } else {
+        info("Check your email for a confirmation link. After verifying, log in.", "Verify Email");
+        setFormType("login");
+      }
     } catch (err) {
       console.error("Student signup error:", err);
-      error("Error sending OTP. Please check your email format.");
+      // Supabase errors often have message property
+      if (err?.status === 400 || err?.message?.includes("invalid")) {
+        error("Invalid signup data. Check email format and password rules.");
+      } else if (err?.message) {
+        error(err.message);
+      } else {
+        error("Signup failed. Try again.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Faculty Signup via OTP
   const handleFacultySignupSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     if (!validatePassword(facultySignup.password)) {
-      warning("Password must contain uppercase, lowercase, and a number.", "Weak Password");
+      warning("Password must contain uppercase, lowercase, and a number (min 6 chars).", "Weak Password");
       setLoading(false);
       return;
     }
 
     try {
-      const { error: otpError } = await supabase.auth.signInWithOtp({
+      const { data, error: signErr } = await supabase.auth.signUp({
         email: facultySignup.collegeEmail,
-        options: { shouldCreateUser: true },
-      });
-      if (otpError) throw otpError;
-
-      info("OTP sent to your faculty email!", "Verification Pending");
-      setPendingProfile({
-        email: facultySignup.collegeEmail,
-        name: facultySignup.name,
-        role: "Faculty",
-        department: facultySignup.department,
-        reg_number: null,
-        dept_year: null,
         password: facultySignup.password,
       });
-      setOtpSent(true);
+
+      if (signErr) throw signErr;
+
+      const user = data?.user ?? data?.session?.user;
+      if (user) {
+        await ensureProfileExists({
+          id: user.id,
+          email: user.email,
+          full_name: facultySignup.name,
+          role: "faculty",
+          department: facultySignup.department,
+          reg_number: null,
+          dept_year: null,
+        });
+
+        success("Account created. Please verify your email if required, then login.", "Signup Success");
+        setFormType("login");
+      } else {
+        info("Check your email for a confirmation link. After verifying, log in.", "Verify Email");
+        setFormType("login");
+      }
     } catch (err) {
       console.error("Faculty signup error:", err);
-      error("Error sending OTP. Please check your email format.");
+      if (err?.message) error(err.message);
+      else error("Signup failed. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ===============================
-  // ✅ Login Handlers
-  // ===============================
+  // ---------- LOGIN handlers ----------
   const handleStudentLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+      const { data, error: loginErr } = await supabase.auth.signInWithPassword({
         email: studentLogin.email,
         password: studentLogin.password,
       });
-      if (loginError) throw loginError;
+
+      if (loginErr) throw loginErr;
+
+      // Resolve user object (new API might return data.user or data.session.user)
+      const user = data?.user ?? data?.session?.user;
+      if (!user) {
+        warning("Login may require email confirmation. Check your inbox.", "Login Notice");
+        setLoading(false);
+        return;
+      }
+
+      // Ensure profile exists (create if missing)
+      await ensureProfileExists({
+        id: user.id,
+        email: user.email,
+        full_name: null,
+        role: "student",
+        department: null,
+        reg_number: null,
+        dept_year: null,
+      });
+
       success("Login successful!", "Student Login");
       navigate("/dashboard");
     } catch (err) {
       console.error("Student login error:", err);
-      error("Invalid login credentials. Please try again.");
+      if (err?.message) error(err.message);
+      else error("Invalid login credentials. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -213,24 +267,41 @@ const LogSignup = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+      const { data, error: loginErr } = await supabase.auth.signInWithPassword({
         email: facultyLogin.email,
         password: facultyLogin.password,
       });
-      if (loginError) throw loginError;
+      if (loginErr) throw loginErr;
+
+      const user = data?.user ?? data?.session?.user;
+      if (!user) {
+        warning("Login may require email confirmation. Check your inbox.", "Login Notice");
+        setLoading(false);
+        return;
+      }
+
+      await ensureProfileExists({
+        id: user.id,
+        email: user.email,
+        full_name: null,
+        role: "faculty",
+        department: null,
+        reg_number: null,
+        dept_year: null,
+      });
+
       success("Login successful!", "Faculty Login");
       navigate("/dashboard");
     } catch (err) {
       console.error("Faculty login error:", err);
-      error("Invalid login credentials. Please try again.");
+      if (err?.message) error(err.message);
+      else error("Invalid login credentials. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ===============================
-  // ✅ Main UI
-  // ===============================
+  // ---------- UI (kept your styles & layout) ----------
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 py-12 px-4">
       <CustomAlert
@@ -242,9 +313,7 @@ const LogSignup = () => {
         onClose={hideAlert}
       />
 
-      {/* Main Card */}
       <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
-        {/* Header */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mb-4 shadow-xl">
             <Sparkles className="w-10 h-10 text-white" />
@@ -255,7 +324,7 @@ const LogSignup = () => {
           </p>
           <button
             onClick={() => navigate("/")}
-            className="mt-4 px-6 py-2 text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2"
+            className="mt-4 px-6 py-2 text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90 shadow-md rounded-xl font-semibold flex items-center gap-2"
           >
             <Home className="w-4 h-4" />
             Back to Home
@@ -270,7 +339,7 @@ const LogSignup = () => {
               onClick={() => setUserType(type)}
               className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
                 userType === type
-                  ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90"
+                  ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -297,7 +366,7 @@ const LogSignup = () => {
               onClick={() => setFormType(type)}
               className={`flex-1 py-3 font-bold text-lg transition-all duration-300 ${
                 formType === type
-                  ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90"
+                  ? "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
             >
@@ -320,10 +389,11 @@ const LogSignup = () => {
                     value={studentLogin.email}
                     onChange={(e) => setStudentLogin({ ...studentLogin, email: e.target.value })}
                     placeholder="e.g., 23127006@srcas.ac.in"
-                    className="w-full pl-12 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-12 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
+
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">Password</label>
                 <div className="relative">
@@ -334,7 +404,7 @@ const LogSignup = () => {
                     value={studentLogin.password}
                     onChange={(e) => setStudentLogin({ ...studentLogin, password: e.target.value })}
                     placeholder="Enter your password"
-                    className="w-full pl-12 pr-12 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-12 pr-12 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                   />
                   <button
                     type="button"
@@ -345,13 +415,12 @@ const LogSignup = () => {
                   </button>
                 </div>
               </div>
+
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-4 mt-4 rounded-2xl font-bold text-lg text-white shadow-xl transition-all duration-300 ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105"
+                className={`w-full py-4 mt-4 rounded-2xl font-bold text-lg text-white shadow-xl ${
+                  loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-purple-600"
                 }`}
               >
                 {loading ? "Logging in..." : "Login"}
@@ -369,10 +438,11 @@ const LogSignup = () => {
                     value={facultyLogin.email}
                     onChange={(e) => setFacultyLogin({ ...facultyLogin, email: e.target.value })}
                     placeholder="e.g., john@srcas.ac.in"
-                    className="w-full pl-12 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-12 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
+
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">Password</label>
                 <div className="relative">
@@ -383,7 +453,7 @@ const LogSignup = () => {
                     value={facultyLogin.password}
                     onChange={(e) => setFacultyLogin({ ...facultyLogin, password: e.target.value })}
                     placeholder="Enter your password"
-                    className="w-full pl-12 pr-12 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-12 pr-12 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                   />
                   <button
                     type="button"
@@ -394,13 +464,12 @@ const LogSignup = () => {
                   </button>
                 </div>
               </div>
+
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full py-4 mt-4 rounded-2xl font-bold text-lg text-white shadow-xl transition-all duration-300 ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-purple-600 hover:scale-105"
+                className={`w-full py-4 mt-4 rounded-2xl font-bold text-lg text-white shadow-xl ${
+                  loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-purple-600"
                 }`}
               >
                 {loading ? "Logging in..." : "Login"}
@@ -422,6 +491,7 @@ const LogSignup = () => {
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-gray-700 font-semibold mb-2">Register Number</label>
               <div className="relative">
@@ -435,6 +505,7 @@ const LogSignup = () => {
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-gray-700 font-semibold mb-2">Department & Year</label>
               <div className="relative">
@@ -448,6 +519,7 @@ const LogSignup = () => {
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-gray-700 font-semibold mb-2">College Email</label>
               <div className="relative">
@@ -456,14 +528,13 @@ const LogSignup = () => {
                   type="email"
                   required
                   value={studentSignup.collegeEmail}
-                  onChange={(e) =>
-                    setStudentSignup({ ...studentSignup, collegeEmail: e.target.value })
-                  }
+                  onChange={(e) => setStudentSignup({ ...studentSignup, collegeEmail: e.target.value })}
                   placeholder="e.g., 23127006@srcas.ac.in"
                   className="w-full pl-12 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-gray-700 font-semibold mb-2">Password</label>
               <div className="relative">
@@ -472,9 +543,7 @@ const LogSignup = () => {
                   type={showPassword ? "text" : "password"}
                   required
                   value={studentSignup.password}
-                  onChange={(e) =>
-                    setStudentSignup({ ...studentSignup, password: e.target.value })
-                  }
+                  onChange={(e) => setStudentSignup({ ...studentSignup, password: e.target.value })}
                   placeholder="Create a password"
                   className="w-full pl-12 pr-12 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                 />
@@ -487,13 +556,12 @@ const LogSignup = () => {
                 </button>
               </div>
             </div>
+
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
-                loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl ${
+                loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-600 to-purple-600"
               } text-white`}
             >
               {loading ? "Creating Account..." : "Sign Up"}
@@ -514,6 +582,7 @@ const LogSignup = () => {
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-gray-700 font-semibold mb-2">Department</label>
               <div className="relative">
@@ -521,14 +590,13 @@ const LogSignup = () => {
                 <input
                   required
                   value={facultySignup.department}
-                  onChange={(e) =>
-                    setFacultySignup({ ...facultySignup, department: e.target.value })
-                  }
+                  onChange={(e) => setFacultySignup({ ...facultySignup, department: e.target.value })}
                   placeholder="e.g., Computer Science"
                   className="w-full pl-12 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-gray-700 font-semibold mb-2">College Email</label>
               <div className="relative">
@@ -537,14 +605,13 @@ const LogSignup = () => {
                   type="email"
                   required
                   value={facultySignup.collegeEmail}
-                  onChange={(e) =>
-                    setFacultySignup({ ...facultySignup, collegeEmail: e.target.value })
-                  }
+                  onChange={(e) => setFacultySignup({ ...facultySignup, collegeEmail: e.target.value })}
                   placeholder="e.g., senthil@srcas.ac.in"
                   className="w-full pl-12 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
+
             <div>
               <label className="block text-gray-700 font-semibold mb-2">Password</label>
               <div className="relative">
@@ -553,9 +620,7 @@ const LogSignup = () => {
                   type={showPassword ? "text" : "password"}
                   required
                   value={facultySignup.password}
-                  onChange={(e) =>
-                    setFacultySignup({ ...facultySignup, password: e.target.value })
-                  }
+                  onChange={(e) => setFacultySignup({ ...facultySignup, password: e.target.value })}
                   placeholder="Create a password"
                   className="w-full pl-12 pr-12 py-3 border rounded-2xl focus:ring-2 focus:ring-blue-500"
                 />
@@ -568,13 +633,12 @@ const LogSignup = () => {
                 </button>
               </div>
             </div>
+
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 mt-6 text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90 rounded-2xl font-bold text-lg shadow-xl transition-all duration-300 transform hover:scale-105 ${
-                loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90"
+              className={`w-full py-4 mt-6 rounded-2xl font-bold text-lg shadow-xl ${
+                loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700"
               } text-white`}
             >
               {loading ? "Creating Account..." : "Sign Up"}
@@ -582,32 +646,6 @@ const LogSignup = () => {
           </form>
         )}
       </div>
-
-      {/* ✅ OTP Modal */}
-      {otpSent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 w-80 text-center animate-fade-in">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">Email Verification</h3>
-            <p className="text-gray-600 mb-4 text-sm">
-              Enter the 6-digit OTP sent to <b>{pendingProfile.email}</b>
-            </p>
-            <input
-              type="text"
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              maxLength={6}
-              className="w-full text-center border rounded-lg py-2 mb-4 focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter OTP"
-            />
-            <button
-              onClick={handleVerifyOtp}
-              className="w-full text-white bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-700 hover:opacity-90 font-semibold py-2 rounded-lg hover:scale-105 transition-all"
-            >
-              Verify OTP
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

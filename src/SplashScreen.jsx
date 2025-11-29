@@ -1,12 +1,14 @@
 // src/components/SplashScreen.jsx
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import logo from './assets/logo.png'
+import logo from '/logo.png'
 
 const SplashScreen = ({ onFinish }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      onFinish();
+      if (onFinish) {
+        onFinish();
+      }
     }, 2000); // show for 2 seconds
     return () => clearTimeout(timer);
   }, [onFinish]);
@@ -19,14 +21,13 @@ const SplashScreen = ({ onFinish }) => {
       className="fixed inset-0 flex flex-col items-center justify-center bg-[#0F172A] text-white z-50"
     >
       <motion.img
-        src={logo} // put your logo in public folder as logo.png (transparent background)
+        src={logo} // Corrected: Path to the logo in the public folder
         alt="CampusFind Logo"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ duration: 0.8, type: "spring" }}
-        className="w-40 h-40 object-contain mb-4"
+        className="w-44 h-44 object-contain mb-8"
       />
-
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

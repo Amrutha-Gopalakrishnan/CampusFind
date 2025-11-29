@@ -1,6 +1,6 @@
 import React from 'react'
 import { Mail, Heart, Shield, Sparkles } from 'lucide-react'
-import logo from './assets/logo.png'
+import logo from '/logo.png'
 
 export default function Footer() {
   return (

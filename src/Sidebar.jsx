@@ -13,7 +13,7 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./supabaseClient";
-import logo from "./assets/logo.png";
+import logo from "/logo.png";
 import { getSafeAvatarUrl } from "./utils/avatarManager";
 
 export default function Sidebar({ active, onNavigate, user, setUser }) {
