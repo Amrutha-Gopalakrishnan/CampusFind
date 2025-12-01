@@ -21,6 +21,9 @@ import {
 import DuplicateDetection from "./components/DuplicateDetection";
 import ExecutiveSummary from "./components/ExecutiveSummary";
 import AutoTagging from "./components/AutoTagging";
+import PastAnalysis from "./components/PastAnalysis";
+
+
 
 export default function AnalyticsDashboard({ user, setUser }) {
   const [activeTab, setActiveTab] = useState("overview");
@@ -84,11 +87,12 @@ export default function AnalyticsDashboard({ user, setUser }) {
   };
 
   const tabs = [
-    { id: "overview", label: "📊 Live Overview", icon: BarChart3 },
-    { id: "duplicates", label: "🔍 Duplicate Detection", icon: Filter },
-    { id: "auto-tagging", label: "🏷️ Smart Categorization", icon: Package },
-    { id: "executive", label: "📈 Executive Summary", icon: TrendingUp }
-  ];
+    { id: "overview", label: "Live Overview", icon: BarChart3 },
+    { id: "duplicates", label: "Duplicate Detection", icon: Filter },
+    { id: "auto-tagging", label: "Smart Categorization", icon: Package },
+    { id: "executive", label: "Executive Summary", icon: TrendingUp },
+    { id: "past-analysis", label: "Past Analysis", icon: Activity },
+];
 
   const renderOverview = () => (
     <div className="space-y-6">
@@ -208,16 +212,20 @@ export default function AnalyticsDashboard({ user, setUser }) {
   const renderDuplicates = () => <DuplicateDetection user={user} />;
   const renderAutoTagging = () => <AutoTagging user={user} />;
   const renderExecutive = () => <ExecutiveSummary user={user} />;
+  const renderPastAnalysis = () => <PastAnalysis />;
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "overview": return renderOverview();
-      case "duplicates": return renderDuplicates();
-      case "auto-tagging": return renderAutoTagging();
-      case "executive": return renderExecutive();
-      default: return renderOverview();
-    }
-  };
+
+
+const renderContent = () => {
+  switch (activeTab) {
+    case "overview": return renderOverview();
+    case "duplicates": return renderDuplicates();
+    case "auto-tagging": return renderAutoTagging();
+    case "executive": return renderExecutive();
+    case "past-analysis": return renderPastAnalysis(); 
+    default: return renderOverview();
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-purple-50/20 p-6">

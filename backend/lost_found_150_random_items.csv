@@ -1,0 +1,151 @@
+﻿id,title,description,name,dept,phone number,register number,place,date,time,status,email
+1,ID Card,A id card which was reported by a student. Looks similar to common campus id cards.,Taylor Fuentes,CSE,705.611.63,23BBA580,Playground,2024-12-17,12:45,Found,taylor82@example.com
+2,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Jessica Mayo,IT,908-820-65,23BBA481,Canteen,2025-09-28,10:00,Found,jessica25@example.com
+3,Watch,A watch which was reported by a student. Looks similar to common campus watchs.,Joyce Jordan,MBA,4334188390,23BBA582,Auditorium,2025-04-14,9:45,Found,joyce36@example.com
+4,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Eileen Watson,MBA,3215241125,23CSE439,Auditorium,2025-01-07,6:00,Lost,eileen43@example.com
+5,Laptop Charger,A laptop charger which was reported by a student. Looks similar to common campus laptop chargers.,Jessica Dawson,ECE,(916)632-6,23MBA971,Playground,2025-06-25,2:30,Lost,jessica77@example.com
+6,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Katie Mcbride,IT,404.894.28,23MBA863,Library,2025-05-15,9:15,Found,katie65@example.com
+7,Lab Coat,A lab coat which was reported by a student. Looks similar to common campus lab coats.,Christian Mullen,ECE,+1-032-595,23ECE130,Campus Block A,2025-11-02,2:30,Lost,christian49@example.com
+8,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Sarah Hernandez,ECE,+1-368-031,23BBA506,Auditorium,2025-07-19,11:30,Found,sarah21@example.com
+9,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Gina Cook,BBA,820.397.42,23CSE677,Campus Block A,2025-03-13,5:15,Found,gina40@example.com
+10,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Christina Norris,ECE,001-653-78,23BBA677,Auditorium,2025-08-26,10:00,Found,christina67@example.com
+11,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Drew Shaffer,IT,6029012092,23BBA105,Library,2025-07-22,11:30,Lost,drew10@example.com
+12,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Nicole Downs,MBA,175.522.88,23MBA488,Library,2025-08-13,8:30,Found,nicole38@example.com
+13,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Anthony Ward,CSE,(575)908-0,23BBA262,Canteen,2025-03-31,2:00,Lost,anthony11@example.com
+14,Watch,A watch which was reported by a student. Looks similar to common campus watchs.,Mitchell Smith,ECE,7157346567,23ECE706,Library,2024-12-14,1:45,Found,mitchell86@example.com
+15,Watch,A watch which was reported by a student. Looks similar to common campus watchs.,Melody Bender,CSE,(111)130-0,23CSE145,Campus Block A,2024-12-31,2:30,Found,melody44@example.com
+16,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Whitney York,ECE,8546930178,23BBA117,Auditorium,2025-05-01,10:00,Found,whitney69@example.com
+17,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Lorraine Schwartz,BBA,763.065.47,23IT618,Library,2025-06-06,6:30,Found,lorraine69@example.com
+18,Bluetooth Speaker,A bluetooth speaker which was reported by a student. Looks similar to common campus bluetooth speakers.,Jimmy Matthews,CSE,843-421-68,23ECE809,Canteen,2025-02-14,12:15,Found,jimmy21@example.com
+19,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Mr. Juan Wilson,ECE,832.608.86,23BBA633,Canteen,2025-08-17,4:15,Found,mr.79@example.com
+20,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Kerri Barron,IT,379-260-75,23BBA746,Library,2025-10-03,10:30,Lost,kerri80@example.com
+21,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Sierra Arroyo,IT,705-961-13,23IT629,Canteen,2025-11-08,4:15,Found,sierra43@example.com
+22,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Elizabeth Copeland,BBA,(136)046-9,23ECE457,Campus Block A,2025-07-21,3:45,Found,elizabeth99@example.com
+23,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Nicholas Allen,BBA,(058)825-2,23CSE326,Library,2025-03-19,12:30,Found,nicholas23@example.com
+24,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Natalie Valdez,CSE,051.566.39,23MBA398,Auditorium,2025-08-17,5:30,Lost,natalie80@example.com
+25,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Kimberly Rodriguez,IT,001-470-81,23CSE582,Playground,2025-08-06,6:30,Lost,kimberly38@example.com
+26,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Todd Hunt,ECE,+1-344-567,23MBA118,Auditorium,2025-07-07,8:00,Found,todd77@example.com
+27,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Clayton White,BBA,092-248-76,23BBA117,Auditorium,2025-03-21,10:45,Found,clayton50@example.com
+28,Spectacles,A spectacles which was reported by a student. Looks similar to common campus spectacless.,Morgan Jones,MBA,449-777-38,23MBA287,Library,2025-11-27,4:15,Found,morgan29@example.com
+29,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Eric Hayes,CSE,+1-458-715,23CSE764,Canteen,2025-07-15,8:00,Lost,eric58@example.com
+30,Laptop Charger,A laptop charger which was reported by a student. Looks similar to common campus laptop chargers.,Michael Wolf,MBA,892-301-71,23IT782,Library,2025-05-06,9:00,Found,michael60@example.com
+31,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,David Bryant,ECE,(336)356-0,23ECE897,Playground,2025-08-21,7:30,Found,david92@example.com
+32,Pen Drive,A pen drive which was reported by a student. Looks similar to common campus pen drives.,Debra Wall,MBA,087-299-15,23BBA221,Canteen,2025-11-12,12:45,Lost,debra70@example.com
+33,Laptop Charger,A laptop charger which was reported by a student. Looks similar to common campus laptop chargers.,Michael Lane,ECE,+1-140-661,23BBA849,Canteen,2025-07-05,2:15,Found,michael94@example.com
+34,Purse,A purse which was reported by a student. Looks similar to common campus purses.,James Hutchinson,IT,391-861-19,23ECE560,Auditorium,2025-05-19,6:30,Found,james98@example.com
+35,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Maria Miller,ECE,(967)224-6,23ECE136,Auditorium,2024-12-24,8:00,Found,maria64@example.com
+36,Pen Drive,A pen drive which was reported by a student. Looks similar to common campus pen drives.,Chad Watson,CSE,957-697-48,23MBA304,Playground,2025-09-23,5:45,Lost,chad24@example.com
+37,Bluetooth Speaker,A bluetooth speaker which was reported by a student. Looks similar to common campus bluetooth speakers.,Jennifer Thomas,IT,(515)594-4,23CSE768,Playground,2025-11-15,7:30,Lost,jennifer51@example.com
+38,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,Tara Espinoza,CSE,815.930.16,23BBA136,Campus Block A,2024-12-28,6:45,Lost,tara85@example.com
+39,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Laura Howard,CSE,(582)153-5,23MBA343,Canteen,2025-10-04,7:15,Lost,laura77@example.com
+40,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Justin Walker,CSE,(978)506-5,23MBA880,Library,2024-12-18,6:15,Lost,justin65@example.com
+41,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Brandon Crane,IT,942.574.24,23IT755,Playground,2025-07-04,5:45,Lost,brandon72@example.com
+42,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Caroline Brown,BBA,671.674.91,23ECE616,Canteen,2025-03-26,2:00,Lost,caroline84@example.com
+43,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Andrew Wu,ECE,748.827.44,23ECE989,Canteen,2025-08-18,9:15,Found,andrew45@example.com
+44,Spectacles,A spectacles which was reported by a student. Looks similar to common campus spectacless.,Patricia Chambers,ECE,001-684-34,23MBA612,Campus Block A,2025-05-08,5:15,Lost,patricia12@example.com
+45,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Felicia Mcguire,BBA,+1-344-346,23CSE739,Library,2025-05-14,9:30,Lost,felicia83@example.com
+46,Pen Drive,A pen drive which was reported by a student. Looks similar to common campus pen drives.,Mary Cooper,IT,(539)729-8,23MBA192,Playground,2025-10-12,12:45,Lost,mary85@example.com
+47,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Nicholas Stanley,ECE,(560)026-8,23BBA886,Canteen,2025-10-23,8:45,Found,nicholas92@example.com
+48,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Dominic Wallace,ECE,+1-849-098,23IT222,Auditorium,2025-09-12,9:30,Found,dominic42@example.com
+49,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Kayla Haynes,BBA,(298)129-8,23ECE359,Playground,2025-07-30,9:15,Found,kayla54@example.com
+50,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Zachary Smith,IT,335-969-63,23BBA742,Campus Block A,2025-02-09,2:00,Found,zachary27@example.com
+51,Calculator,A calculator which was reported by a student. Looks similar to common campus calculators.,Mark Torres,IT,042-180-21,23CSE957,Playground,2025-03-23,6:15,Lost,mark77@example.com
+52,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Felicia Velez,ECE,201-940-89,23CSE775,Library,2025-05-30,7:00,Found,felicia60@example.com
+53,Keychain,A keychain which was reported by a student. Looks similar to common campus keychains.,Faith Martinez,MBA,9662405967,23IT313,Auditorium,2025-02-08,3:15,Found,faith41@example.com
+54,Bluetooth Speaker,A bluetooth speaker which was reported by a student. Looks similar to common campus bluetooth speakers.,Charles Murray,IT,(946)381-3,23ECE643,Campus Block A,2025-01-04,5:15,Found,charles55@example.com
+55,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Daniel Montgomery,CSE,+1-065-747,23BBA140,Canteen,2025-02-22,12:45,Found,daniel89@example.com
+56,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Amanda Jones,IT,047-222-48,23ECE525,Library,2025-03-15,7:30,Found,amanda92@example.com
+57,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Richard King,MBA,982-694-22,23CSE177,Library,2025-06-24,10:15,Found,richard14@example.com
+58,Laptop Charger,A laptop charger which was reported by a student. Looks similar to common campus laptop chargers.,Stephen Nguyen,BBA,(127)873-0,23BBA232,Library,2025-11-02,2:15,Lost,stephen22@example.com
+59,Water Bottle,A water bottle which was reported by a student. Looks similar to common campus water bottles.,Tracie Castro,ECE,680.799.20,23MBA690,Campus Block A,2025-09-02,5:00,Found,tracie15@example.com
+60,Keychain,A keychain which was reported by a student. Looks similar to common campus keychains.,Vanessa Henry,MBA,954-871-80,23ECE402,Auditorium,2025-11-27,11:45,Lost,vanessa63@example.com
+61,Calculator,A calculator which was reported by a student. Looks similar to common campus calculators.,Timothy Kim,MBA,+1-273-193,23ECE522,Auditorium,2025-08-07,11:15,Lost,timothy17@example.com
+62,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Joseph Flowers,CSE,+1-762-939,23ECE975,Playground,2025-11-17,4:30,Found,joseph22@example.com
+63,Water Bottle,A water bottle which was reported by a student. Looks similar to common campus water bottles.,Kristina Garza,IT,165.127.34,23MBA516,Campus Block A,2025-04-01,5:15,Found,kristina49@example.com
+64,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Anthony Andrews,BBA,(712)702-8,23BBA296,Library,2025-02-13,11:15,Found,anthony31@example.com
+65,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Antonio Evans,BBA,+1-168-928,23ECE377,Playground,2025-06-07,7:45,Lost,antonio35@example.com
+66,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Wesley Harris,BBA,+1-972-396,23IT610,Playground,2025-06-10,2:30,Found,wesley99@example.com
+67,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,Kenneth Turner,IT,558.679.59,23IT696,Library,2025-03-17,12:00,Lost,kenneth79@example.com
+68,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Michael Vargas,BBA,(532)307-8,23MBA174,Playground,2025-10-15,10:30,Lost,michael19@example.com
+69,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Sabrina Davis,CSE,946-678-28,23MBA747,Library,2025-10-25,8:30,Lost,sabrina71@example.com
+70,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Stephanie Brooks,BBA,314-712-12,23CSE823,Campus Block A,2025-07-17,3:30,Lost,stephanie54@example.com
+71,Purse,A purse which was reported by a student. Looks similar to common campus purses.,Steven Nunez,MBA,001-640-71,23BBA681,Campus Block A,2025-11-16,4:00,Found,steven14@example.com
+72,Calculator,A calculator which was reported by a student. Looks similar to common campus calculators.,Victor Mclaughlin,CSE,9194075261,23IT545,Canteen,2025-02-20,5:15,Found,victor78@example.com
+73,Calculator,A calculator which was reported by a student. Looks similar to common campus calculators.,Jeffery Jenkins,MBA,337.719.06,23ECE491,Library,2025-11-13,1:45,Lost,jeffery83@example.com
+74,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Christy Harris,MBA,(038)104-0,23BBA429,Library,2025-01-01,1:30,Lost,christy99@example.com
+75,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Chelsea Holmes,IT,680-538-00,23CSE950,Library,2025-08-02,8:15,Found,chelsea70@example.com
+76,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Angela Hernandez,MBA,6071999740,23BBA909,Auditorium,2025-05-13,9:00,Lost,angela70@example.com
+77,Keychain,A keychain which was reported by a student. Looks similar to common campus keychains.,Matthew Andrews,BBA,7593995713,23ECE453,Campus Block A,2025-11-28,11:30,Found,matthew12@example.com
+78,Pen Drive,A pen drive which was reported by a student. Looks similar to common campus pen drives.,Denise Dunn,CSE,313-751-25,23ECE630,Canteen,2025-03-02,1:45,Found,denise95@example.com
+79,Spectacles,A spectacles which was reported by a student. Looks similar to common campus spectacless.,Michael Gibson PhD,ECE,+1-834-332,23ECE109,Playground,2025-01-22,7:45,Lost,michael22@example.com
+80,ID Card,A id card which was reported by a student. Looks similar to common campus id cards.,Rebecca Price,ECE,9561733017,23IT700,Auditorium,2025-03-23,8:15,Lost,rebecca45@example.com
+81,Bluetooth Speaker,A bluetooth speaker which was reported by a student. Looks similar to common campus bluetooth speakers.,Eric Lozano,BBA,0293217755,23CSE586,Canteen,2025-03-05,4:45,Found,eric45@example.com
+82,Lab Coat,A lab coat which was reported by a student. Looks similar to common campus lab coats.,Cindy Landry,IT,0510492252,23MBA917,Playground,2025-04-14,10:30,Lost,cindy82@example.com
+83,Water Bottle,A water bottle which was reported by a student. Looks similar to common campus water bottles.,Michelle Rogers,BBA,(541)020-6,23CSE763,Auditorium,2025-03-14,3:00,Found,michelle23@example.com
+84,ID Card,A id card which was reported by a student. Looks similar to common campus id cards.,Tyler Stevens,ECE,493.110.15,23CSE178,Playground,2025-08-13,7:30,Found,tyler90@example.com
+85,Pen Drive,A pen drive which was reported by a student. Looks similar to common campus pen drives.,Kelly Perry,IT,388.902.32,23MBA385,Library,2025-07-20,10:15,Found,kelly79@example.com
+86,Water Bottle,A water bottle which was reported by a student. Looks similar to common campus water bottles.,Jeffrey Brown,BBA,(363)553-8,23MBA589,Auditorium,2025-11-02,8:45,Lost,jeffrey36@example.com
+87,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Carl Oliver,IT,+1-619-483,23BBA246,Auditorium,2025-10-01,11:00,Lost,carl31@example.com
+88,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,Tina Reese DDS,IT,610.425.97,23MBA775,Auditorium,2025-08-18,3:30,Lost,tina25@example.com
+89,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Kelly Rodriguez,BBA,(046)542-4,23IT314,Auditorium,2025-11-20,1:45,Lost,kelly45@example.com
+90,ID Card,A id card which was reported by a student. Looks similar to common campus id cards.,Samuel Fuentes,MBA,001-627-83,23IT915,Auditorium,2025-05-18,12:15,Lost,samuel60@example.com
+91,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Rachel Bailey,CSE,7178362984,23CSE977,Campus Block A,2024-11-28,3:15,Found,rachel21@example.com
+92,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Brandon Reed,ECE,+1-129-164,23BBA923,Auditorium,2025-02-14,10:00,Found,brandon55@example.com
+93,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Diana Johnson,MBA,854.339.37,23BBA102,Campus Block A,2025-01-23,10:30,Lost,diana28@example.com
+94,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,Kathleen Newman,MBA,+1-324-498,23IT423,Auditorium,2025-06-22,10:00,Found,kathleen85@example.com
+95,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Steven Huerta,CSE,(485)265-3,23IT319,Library,2025-10-17,10:00,Found,steven47@example.com
+96,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Connor Brown,IT,(298)845-8,23CSE263,Auditorium,2025-04-25,4:15,Lost,connor30@example.com
+97,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Steven Sanders,CSE,982-738-36,23MBA875,Auditorium,2025-04-24,4:00,Lost,steven46@example.com
+98,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Elizabeth Simmons,IT,017.134.22,23IT843,Library,2025-07-11,10:15,Lost,elizabeth91@example.com
+99,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Natasha Rogers,MBA,835-111-40,23MBA991,Canteen,2025-10-26,3:00,Found,natasha75@example.com
+100,Calculator,A calculator which was reported by a student. Looks similar to common campus calculators.,Timothy Cook,CSE,704.626.78,23MBA522,Auditorium,2025-09-27,12:30,Lost,timothy94@example.com
+101,Bluetooth Speaker,A bluetooth speaker which was reported by a student. Looks similar to common campus bluetooth speakers.,Melinda Bridges,CSE,001-758-46,23CSE159,Canteen,2024-12-13,6:00,Lost,melinda84@example.com
+102,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Steven Rodriguez,CSE,7657507923,23ECE501,Library,2025-02-08,1:00,Lost,steven15@example.com
+103,Lab Coat,A lab coat which was reported by a student. Looks similar to common campus lab coats.,Jacob Nunez,MBA,119.196.45,23BBA217,Library,2025-03-09,8:00,Lost,jacob53@example.com
+104,Bluetooth Speaker,A bluetooth speaker which was reported by a student. Looks similar to common campus bluetooth speakers.,Carl Clark,IT,504-026-95,23BBA672,Campus Block A,2025-04-22,1:15,Found,carl62@example.com
+105,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Tyler Burns,CSE,+1-421-389,23CSE740,Campus Block A,2025-06-27,1:15,Lost,tyler92@example.com
+106,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,Cassandra Pearson,ECE,001-852-69,23ECE468,Canteen,2025-04-13,6:30,Found,cassandra33@example.com
+107,Spectacles,A spectacles which was reported by a student. Looks similar to common campus spectacless.,Beth Delgado,CSE,408.909.25,23BBA525,Playground,2025-03-26,3:00,Lost,beth96@example.com
+108,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,Brian Morales,ECE,5214357621,23BBA247,Library,2025-10-04,5:00,Lost,brian70@example.com
+109,Laptop Charger,A laptop charger which was reported by a student. Looks similar to common campus laptop chargers.,Richard Walker,MBA,262-386-25,23BBA520,Playground,2025-04-01,5:45,Found,richard46@example.com
+110,ID Card,A id card which was reported by a student. Looks similar to common campus id cards.,Julie Mccarthy,MBA,545.613.22,23BBA424,Campus Block A,2025-04-18,9:30,Found,julie66@example.com
+111,Keychain,A keychain which was reported by a student. Looks similar to common campus keychains.,Ryan Morales,IT,922.649.57,23BBA900,Playground,2025-10-06,6:15,Lost,ryan91@example.com
+112,Watch,A watch which was reported by a student. Looks similar to common campus watchs.,Lisa Kline,CSE,134.026.71,23MBA381,Campus Block A,2025-11-11,6:45,Lost,lisa48@example.com
+113,Keychain,A keychain which was reported by a student. Looks similar to common campus keychains.,Dale Hinton,BBA,001-000-75,23ECE364,Playground,2025-09-19,12:00,Found,dale44@example.com
+114,Earphones,A earphones which was reported by a student. Looks similar to common campus earphoness.,Debra Greene,BBA,001-740-66,23IT391,Library,2025-03-22,7:45,Found,debra90@example.com
+115,Spectacles,A spectacles which was reported by a student. Looks similar to common campus spectacless.,Jennifer Fowler,CSE,031.767.76,23ECE663,Playground,2025-11-10,2:45,Found,jennifer18@example.com
+116,Watch,A watch which was reported by a student. Looks similar to common campus watchs.,Steven Rhodes,BBA,7042748755,23ECE987,Canteen,2025-02-16,10:15,Lost,steven17@example.com
+117,Keychain,A keychain which was reported by a student. Looks similar to common campus keychains.,Marissa Ward,BBA,870.919.46,23MBA392,Canteen,2024-12-28,2:30,Found,marissa58@example.com
+118,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,John Hodge,CSE,001-768-69,23CSE579,Canteen,2025-02-27,10:45,Found,john78@example.com
+119,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,David Alvarez,ECE,375-714-58,23MBA463,Canteen,2025-10-20,4:45,Found,david60@example.com
+120,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Kristen Forbes,BBA,(932)826-7,23CSE632,Canteen,2025-02-23,10:30,Lost,kristen65@example.com
+121,Calculator,A calculator which was reported by a student. Looks similar to common campus calculators.,Jacob Potter,ECE,613.661.67,23MBA541,Playground,2025-05-24,1:15,Lost,jacob33@example.com
+122,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Brian Jones,BBA,001-634-84,23CSE177,Canteen,2025-06-11,5:30,Found,brian66@example.com
+123,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Kenneth Perry,BBA,8474946955,23IT746,Library,2025-08-09,11:30,Found,kenneth64@example.com
+124,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Valerie Lewis,MBA,460-025-19,23ECE757,Canteen,2025-07-15,10:45,Found,valerie94@example.com
+125,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Jason Rogers,MBA,119.481.83,23BBA922,Auditorium,2025-05-14,3:30,Lost,jason63@example.com
+126,Umbrella,A umbrella which was reported by a student. Looks similar to common campus umbrellas.,Stephen Jackson,CSE,344-214-98,23CSE603,Playground,2025-02-20,12:15,Found,stephen80@example.com
+127,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Wanda Hill,BBA,889.357.09,23ECE558,Library,2025-09-19,7:15,Lost,wanda36@example.com
+128,Spectacles,A spectacles which was reported by a student. Looks similar to common campus spectacless.,Adam Cox,IT,001-024-86,23ECE992,Auditorium,2025-10-16,1:30,Found,adam53@example.com
+129,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Brian Cunningham,ECE,7298759299,23ECE174,Campus Block A,2024-12-09,5:15,Found,brian91@example.com
+130,Pen Drive,A pen drive which was reported by a student. Looks similar to common campus pen drives.,James Smith,CSE,727-060-64,23BBA247,Library,2025-03-03,10:15,Found,james95@example.com
+131,Lab Coat,A lab coat which was reported by a student. Looks similar to common campus lab coats.,Jessica Sullivan,BBA,906-807-51,23IT408,Playground,2025-06-19,7:30,Lost,jessica23@example.com
+132,Purse,A purse which was reported by a student. Looks similar to common campus purses.,Danny Gonzales,CSE,466.119.49,23ECE564,Campus Block A,2024-12-26,8:00,Found,danny23@example.com
+133,Watch,A watch which was reported by a student. Looks similar to common campus watchs.,Phillip Price,MBA,(138)907-7,23ECE418,Library,2025-03-19,2:30,Found,phillip36@example.com
+134,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Eric Snyder,CSE,987-944-83,23CSE595,Campus Block A,2025-06-24,11:15,Lost,eric91@example.com
+135,Calculator,A calculator which was reported by a student. Looks similar to common campus calculators.,Kenneth Brown,IT,001-769-63,23BBA925,Canteen,2025-05-13,3:00,Lost,kenneth82@example.com
+136,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,William Cole,CSE,001-190-71,23IT754,Auditorium,2025-04-24,6:30,Found,william13@example.com
+137,Sports Shoes,A sports shoes which was reported by a student. Looks similar to common campus sports shoess.,Meghan Rodgers,CSE,2945699563,23CSE902,Campus Block A,2024-12-20,8:30,Lost,meghan42@example.com
+138,Pen Drive,A pen drive which was reported by a student. Looks similar to common campus pen drives.,Stephanie Adams,ECE,7956605669,23IT687,Auditorium,2025-03-12,9:30,Lost,stephanie59@example.com
+139,Notebook,A notebook which was reported by a student. Looks similar to common campus notebooks.,Steven Klein,ECE,+1-104-724,23CSE117,Library,2025-11-02,5:15,Found,steven41@example.com
+140,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Ronald Williams,IT,(391)187-0,23MBA565,Campus Block A,2025-03-18,8:15,Found,ronald66@example.com
+141,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Amanda Flores,CSE,653-762-13,23IT722,Library,2025-09-13,9:00,Found,amanda61@example.com
+142,Purse,A purse which was reported by a student. Looks similar to common campus purses.,Erin Ware,CSE,688-800-56,23BBA422,Library,2025-09-07,8:30,Lost,erin55@example.com
+143,Backpack,A backpack which was reported by a student. Looks similar to common campus backpacks.,Andrew Rice,ECE,578-056-26,23BBA761,Campus Block A,2025-09-25,11:45,Lost,andrew50@example.com
+144,Purse,A purse which was reported by a student. Looks similar to common campus purses.,Kiara Huffman,MBA,9095750995,23CSE928,Library,2025-08-14,1:30,Lost,kiara24@example.com
+145,ID Card,A id card which was reported by a student. Looks similar to common campus id cards.,Krystal Williams,MBA,+1-998-221,23MBA507,Campus Block A,2025-11-15,9:15,Found,krystal64@example.com
+146,Wallet,A wallet which was reported by a student. Looks similar to common campus wallets.,Michael Hodges,BBA,(554)894-5,23CSE913,Auditorium,2025-02-27,9:00,Lost,michael31@example.com
+147,Textbook,A textbook which was reported by a student. Looks similar to common campus textbooks.,Dwayne Wallace,ECE,(059)533-6,23ECE920,Auditorium,2025-05-11,8:45,Found,dwayne12@example.com
+148,Tiffin Box,A tiffin box which was reported by a student. Looks similar to common campus tiffin boxs.,Charles Roberts,IT,(740)535-1,23ECE309,Library,2025-11-18,10:30,Lost,charles34@example.com
+149,Power Bank,A power bank which was reported by a student. Looks similar to common campus power banks.,Christy Martinez MD,MBA,001-190-47,23IT221,Canteen,2025-01-18,5:30,Found,christy47@example.com
+150,Keychain,A keychain which was reported by a student. Looks similar to common campus keychains.,John Giles PhD,IT,(178)065-0,23ECE568,Auditorium,2025-06-11,11:30,Lost,john81@example.com
