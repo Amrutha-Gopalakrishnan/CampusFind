@@ -24,7 +24,6 @@ import AutoTagging from "./components/AutoTagging";
 import PastAnalysis from "./components/PastAnalysis";
 
 
-
 export default function AnalyticsDashboard({ user, setUser }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
@@ -213,7 +212,6 @@ export default function AnalyticsDashboard({ user, setUser }) {
   const renderAutoTagging = () => <AutoTagging user={user} />;
   const renderExecutive = () => <ExecutiveSummary user={user} />;
   const renderPastAnalysis = () => <PastAnalysis />;
-
 
 
 const renderContent = () => {

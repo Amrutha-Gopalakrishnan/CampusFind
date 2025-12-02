@@ -1,5 +1,9 @@
+python-multipart
+ultralytics
 fastapi
 uvicorn
-python-multipart
 pandas
-ultralytics
+numpy
+scikit-learn
+sentence-transformers
+scipy

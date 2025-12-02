@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000", // your FastAPI backend
+  baseURL: "https://campusfind-1q4s.onrender.com", // your FastAPI backend
 });
 
 // POST new item to backend

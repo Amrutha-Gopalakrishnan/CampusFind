@@ -1,0 +1,301 @@
+id,item_title,description,name,department,phone,email,reg_no,location,date,time,status,item_category,item_value,image_present,day_of_week,lost_hour
+1,Laptop Charger,Laptop Charger blue beside Block B,Jothi,AI&DS,9698328408,jothi30@gmail.com,434595,Parking Area,26/11/2024,06:08 AM,lost,Misc,high,1,Saturday,14
+2,ID Card,ID Card new found Auditorium,Manoj,ECE,9458082495,manoj29@gmail.com,970775,Block B,28/5/2024,01:24 AM,lost,Electronics,medium,1,Tuesday,7
+3,Mobile Phone,Mobile Phone black near Block A,Isha,CSE,9502007935,isha51@gmail.com,823216,Block B,9/12/2024,06:11 PM,lost,Clothing,low,1,Tuesday,6
+4,Bag,Bag small lost Ground Floor,Gayathri,EEE,9385985237,gayathri47@gmail.com,480706,Canteen,24/11/2024,05:13 PM,found,Accessories,low,0,Monday,14
+5,Laptop Charger,Laptop Charger large near Ground Floor,Kavin,AI&DS,9456965281,kavin62@gmail.com,772708,Ground Floor,6/2/2024,11:35 PM,lost,Stationery,medium,0,Friday,3
+6,Wallet,Wallet blue lost Canteen,Lavanya,IT,9393250421,lavanya97@gmail.com,614975,Lab 2,6/5/2024,11:24 PM,lost,Misc,high,1,Tuesday,8
+7,Water Bottle,Water Bottle red found Lab 2,Omkar,AI&DS,9667270866,omkar64@gmail.com,492856,Lab 2,26/2/2024,06:15 AM,lost,Clothing,medium,0,Wednesday,11
+8,Wallet,Wallet new found Ground Floor,Umesh,IT,9710783004,umesh23@gmail.com,820753,Block B,2/6/2024,08:52 AM,found,Stationery,high,0,Monday,0
+9,Notebook,Notebook black found Ground Floor,Yamini,IT,9421972288,yamini31@gmail.com,878868,Auditorium,18/11/2024,11:52 PM,lost,Stationery,low,0,Sunday,20
+10,Laptop Charger,Laptop Charger old beside Library,Chitra,IT,9551742901,chitra95@gmail.com,879559,Lab 2,13/2/2024,12:01 PM,found,Accessories,high,1,Wednesday,19
+11,ID Card,ID Card new lost Lab 1,Divya,IT,9741798336,divya90@gmail.com,759371,Library,13/6/2024,01:27 AM,found,Clothing,low,1,Friday,0
+12,Wallet,Wallet blue near Library,Divya,ECE,9880768358,divya25@gmail.com,185350,Parking Area,2/1/2024,05:48 AM,lost,Clothing,low,1,Sunday,16
+13,ID Card,ID Card black found Library,Harish,AI&DS,9519951913,harish11@gmail.com,377110,Lab 2,18/5/2024,03:23 AM,found,Misc,medium,1,Friday,19
+14,Watch,Watch large near Block A,Umesh,CSE,9166200717,umesh83@gmail.com,170725,Ground Floor,3/5/2024,05:08 PM,found,Electronics,high,1,Tuesday,15
+15,Water Bottle,Water Bottle old beside Canteen,Farooq,MECH,9480066836,farooq75@gmail.com,486100,Block A,17/12/2024,06:47 PM,found,Stationery,high,1,Saturday,13
+16,Watch,Watch old found Lab 2,Gayathri,ECE,9130832244,gayathri44@gmail.com,429663,Auditorium,16/10/2024,08:42 AM,found,Clothing,medium,0,Thursday,9
+17,Wallet,Wallet black near Lab 2,Yamini,ECE,9749876005,yamini35@gmail.com,865212,Lab 1,4/6/2024,01:49 PM,lost,Misc,low,0,Wednesday,13
+18,Mobile Phone,Mobile Phone new found Lab 1,Yamini,EEE,9924095431,yamini71@gmail.com,763406,Parking Area,20/11/2024,07:27 AM,found,Accessories,medium,1,Saturday,14
+19,Mobile Phone,Mobile Phone small near Canteen,Manoj,CIVIL,9284053442,manoj12@gmail.com,159706,Canteen,17/5/2024,03:24 AM,lost,Clothing,medium,1,Monday,16
+20,ID Card,ID Card new near Corridor,Arun,AI&DS,9415029981,arun8@gmail.com,626080,Corridor,26/10/2024,11:14 PM,found,Stationery,low,1,Tuesday,8
+21,Water Bottle,Water Bottle small beside Lab 2,Umesh,EEE,9140874501,umesh58@gmail.com,857843,Parking Area,22/6/2024,06:29 AM,found,Stationery,high,1,Saturday,23
+22,Bag,Bag black found Block A,Eshan,EEE,9978072429,eshan96@gmail.com,677565,Ground Floor,14/8/2024,10:54 AM,lost,Clothing,medium,0,Sunday,5
+23,Calculator,Calculator new found Lab 2,Priya,EEE,9704095610,priya88@gmail.com,897741,Parking Area,11/3/2024,04:50 PM,found,Stationery,high,0,Tuesday,1
+24,Notebook,Notebook red near Library,Harish,IT,9100989389,harish8@gmail.com,687486,Ground Floor,25/2/2024,06:36 AM,lost,Stationery,low,1,Friday,23
+25,Watch,Watch red found Lab 1,Kavin,EEE,9174292882,kavin91@gmail.com,311514,Lab 2,28/8/2024,07:45 AM,found,Accessories,high,1,Thursday,2
+26,ID Card,ID Card old beside Block A,Jothi,CSE,9391112420,jothi8@gmail.com,635950,Corridor,5/1/2024,07:50 AM,lost,Stationery,medium,0,Monday,16
+27,Watch,Watch large beside Block B,Tara,IT,9254536172,tara67@gmail.com,288280,Parking Area,12/10/2024,04:42 AM,lost,Stationery,low,0,Thursday,2
+28,Mobile Phone,Mobile Phone blue found Block B,Manoj,CSE,9641813767,manoj48@gmail.com,406053,Ground Floor,3/9/2024,11:19 AM,found,Clothing,low,0,Saturday,0
+29,Calculator,Calculator blue lost Block B,Umesh,IT,9694128374,umesh70@gmail.com,150624,Block A,22/2/2024,01:37 AM,found,Clothing,high,1,Thursday,14
+30,Watch,Watch blue beside Corridor,Omkar,CIVIL,9589776865,omkar49@gmail.com,426266,Corridor,12/5/2024,06:39 AM,lost,Stationery,high,0,Friday,10
+31,Laptop Charger,Laptop Charger blue near Canteen,Wamiqa,CSE,9154247486,wamiqa18@gmail.com,500365,Lab 2,7/10/2024,06:23 AM,lost,Electronics,high,0,Tuesday,22
+32,Water Bottle,Water Bottle old lost Block B,Harish,EEE,9828764659,harish96@gmail.com,173225,Ground Floor,21/9/2024,06:21 AM,found,Electronics,low,1,Wednesday,0
+33,ID Card,ID Card new beside Library,Nisha,IT,9572463993,nisha37@gmail.com,852144,Canteen,11/11/2024,02:47 PM,found,Misc,medium,1,Tuesday,3
+34,Laptop Charger,Laptop Charger large found Ground Floor,Nisha,MECH,9245824624,nisha59@gmail.com,831133,Lab 2,15/4/2024,01:11 PM,lost,Clothing,high,1,Sunday,15
+35,Bag,Bag blue lost Block A,Farooq,ECE,9895134805,farooq47@gmail.com,631887,Lab 2,7/8/2024,08:49 AM,lost,Stationery,high,0,Friday,8
+36,Notebook,Notebook large lost Lab 2,Quentin,MECH,9988252034,quentin92@gmail.com,718102,Ground Floor,27/10/2024,06:05 PM,found,Misc,high,0,Saturday,22
+37,Calculator,Calculator red near Parking Area,Wamiqa,MECH,9414827413,wamiqa39@gmail.com,553570,Ground Floor,25/6/2024,03:15 AM,lost,Stationery,low,1,Tuesday,9
+38,Notebook,Notebook small beside Lab 1,Eshan,EEE,9454585765,eshan33@gmail.com,617692,Library,26/2/2024,09:37 PM,found,Misc,high,1,Sunday,1
+39,Laptop Charger,Laptop Charger small beside Library,Divya,MECH,9761495327,divya87@gmail.com,890022,Block B,14/8/2024,03:48 PM,lost,Accessories,high,0,Monday,22
+40,Wallet,Wallet small beside Library,Jothi,CIVIL,9782089907,jothi64@gmail.com,353035,Ground Floor,23/7/2024,01:43 AM,lost,Clothing,low,0,Saturday,9
+41,Watch,Watch large found Canteen,Arun,IT,9387971745,arun45@gmail.com,604817,Corridor,27/3/2024,08:22 PM,lost,Misc,high,0,Sunday,4
+42,Notebook,Notebook new beside Auditorium,Zaheer,MECH,9639150724,zaheer44@gmail.com,194696,Corridor,22/1/2024,07:58 PM,lost,Stationery,medium,1,Monday,22
+43,Bag,Bag new beside Parking Area,Kavin,CSE,9552440444,kavin54@gmail.com,686864,Lab 2,10/1/2024,10:15 PM,lost,Clothing,medium,1,Saturday,0
+44,Calculator,Calculator red near Canteen,Kavin,MECH,9543799680,kavin15@gmail.com,175236,Block B,7/10/2024,06:26 AM,lost,Accessories,medium,1,Monday,16
+45,Bag,Bag small beside Canteen,Eshan,AI&DS,9238146824,eshan11@gmail.com,252383,Parking Area,19/8/2024,12:57 PM,found,Misc,medium,1,Friday,15
+46,Notebook,Notebook old beside Block B,Sneha,CSE,9713808290,sneha55@gmail.com,335370,Library,12/3/2024,08:40 AM,found,Accessories,medium,0,Tuesday,11
+47,Wallet,Wallet small near Block A,Sneha,ECE,9104643279,sneha16@gmail.com,240659,Auditorium,10/7/2024,10:58 AM,lost,Clothing,medium,0,Monday,19
+48,Calculator,Calculator new beside Block B,Chitra,IT,9832479392,chitra84@gmail.com,117804,Lab 1,12/11/2024,06:14 PM,lost,Clothing,low,0,Tuesday,0
+49,Water Bottle,Water Bottle red beside Auditorium,Nisha,ECE,9788454516,nisha95@gmail.com,469922,Auditorium,15/6/2024,07:39 PM,lost,Misc,high,1,Sunday,2
+50,Laptop Charger,Laptop Charger black lost Block B,Arun,CIVIL,9899392825,arun21@gmail.com,591544,Block B,1/4/2024,03:19 AM,found,Stationery,high,1,Tuesday,23
+51,ID Card,ID Card old found Corridor,Kavin,CIVIL,9543624839,kavin11@gmail.com,221567,Lab 1,17/12/2024,03:00 AM,lost,Clothing,high,1,Friday,21
+52,ID Card,ID Card old lost Lab 1,Nisha,EEE,9314609553,nisha84@gmail.com,796910,Canteen,23/2/2024,02:41 AM,lost,Clothing,medium,0,Sunday,6
+53,Headphones,Headphones small beside Parking Area,Umesh,ECE,9521210556,umesh84@gmail.com,855018,Lab 2,10/8/2024,03:32 AM,lost,Accessories,medium,1,Friday,16
+54,Bag,Bag black found Block B,Isha,MECH,9627567592,isha79@gmail.com,151640,Block A,22/11/2024,10:17 AM,lost,Clothing,medium,0,Wednesday,20
+55,Water Bottle,Water Bottle old lost Block B,Wamiqa,ECE,9862886923,wamiqa33@gmail.com,875568,Corridor,5/12/2024,08:44 PM,found,Clothing,low,1,Monday,23
+56,Mobile Phone,Mobile Phone red beside Lab 1,Harish,IT,9696408730,harish8@gmail.com,578235,Canteen,5/12/2024,07:21 AM,found,Misc,medium,0,Friday,11
+57,Calculator,Calculator large found Lab 1,Farooq,AI&DS,9281728981,farooq1@gmail.com,847678,Canteen,11/2/2024,05:37 PM,found,Clothing,medium,1,Friday,2
+58,Headphones,Headphones old lost Parking Area,Harish,CIVIL,9478009493,harish57@gmail.com,534038,Corridor,5/9/2024,03:08 PM,lost,Misc,high,1,Saturday,8
+59,Calculator,Calculator old lost Block A,Wamiqa,AI&DS,9427406692,wamiqa72@gmail.com,997425,Ground Floor,19/5/2024,04:42 PM,found,Clothing,medium,1,Sunday,12
+60,Water Bottle,Water Bottle large beside Corridor,Chitra,MECH,9465003936,chitra3@gmail.com,914684,Library,23/10/2024,02:44 PM,found,Clothing,high,1,Friday,6
+61,Water Bottle,Water Bottle large near Lab 2,Eshan,CIVIL,9302152713,eshan50@gmail.com,946270,Library,4/10/2024,05:05 AM,found,Electronics,medium,1,Monday,17
+62,Bag,Bag old found Parking Area,Zaheer,CSE,9857496122,zaheer68@gmail.com,616657,Lab 1,2/8/2024,03:00 AM,lost,Accessories,high,0,Friday,17
+63,Wallet,Wallet blue lost Lab 2,Divya,AI&DS,9558405523,divya51@gmail.com,993834,Auditorium,14/4/2024,08:10 AM,lost,Clothing,low,1,Sunday,8
+64,Water Bottle,Water Bottle small near Parking Area,Quentin,IT,9101032187,quentin59@gmail.com,771716,Canteen,19/11/2024,12:00 PM,found,Stationery,medium,1,Sunday,6
+65,Headphones,Headphones small beside Library,Sneha,EEE,9379859884,sneha51@gmail.com,958469,Auditorium,7/10/2024,04:04 PM,found,Misc,low,1,Wednesday,13
+66,Notebook,Notebook small found Library,Rohit,CIVIL,9479875716,rohit67@gmail.com,627028,Parking Area,18/2/2024,01:54 AM,found,Accessories,low,0,Friday,5
+67,Headphones,Headphones blue near Ground Floor,Nisha,IT,9934678670,nisha66@gmail.com,151069,Library,19/6/2024,09:03 PM,lost,Electronics,medium,1,Monday,10
+68,Watch,Watch new lost Library,Tara,CSE,9175526533,tara75@gmail.com,804142,Library,2/8/2024,04:33 PM,found,Clothing,medium,0,Saturday,9
+69,Watch,Watch red found Parking Area,Yamini,CIVIL,9714668974,yamini30@gmail.com,960127,Lab 2,21/1/2024,09:38 PM,lost,Accessories,low,1,Friday,12
+70,Wallet,Wallet large found Block A,Priya,CSE,9315959370,priya2@gmail.com,467161,Ground Floor,5/11/2024,09:40 PM,lost,Stationery,high,0,Monday,2
+71,Mobile Phone,Mobile Phone blue near Lab 2,Sneha,EEE,9903147187,sneha2@gmail.com,705891,Ground Floor,6/11/2024,10:18 AM,lost,Stationery,high,1,Friday,19
+72,Calculator,Calculator black found Block A,Yamini,ECE,9698956890,yamini70@gmail.com,844185,Auditorium,22/7/2024,08:24 PM,lost,Clothing,low,1,Sunday,2
+73,Laptop Charger,Laptop Charger black found Lab 2,Gayathri,AI&DS,9978434821,gayathri61@gmail.com,676835,Block B,18/8/2024,05:18 AM,lost,Misc,low,0,Thursday,7
+74,Calculator,Calculator old found Lab 2,Farooq,CIVIL,9834529204,farooq58@gmail.com,839921,Library,6/7/2024,07:15 AM,lost,Clothing,low,1,Wednesday,17
+75,Notebook,Notebook red lost Block B,Chitra,ECE,9985733052,chitra14@gmail.com,181452,Auditorium,17/7/2024,01:21 PM,found,Clothing,medium,1,Monday,18
+76,Notebook,Notebook large found Library,Eshan,CIVIL,9344457558,eshan8@gmail.com,263667,Lab 1,15/6/2024,08:17 AM,found,Misc,high,0,Tuesday,21
+77,Water Bottle,Water Bottle small lost Parking Area,Arun,IT,9624848555,arun68@gmail.com,605596,Canteen,20/11/2024,03:17 PM,lost,Clothing,medium,1,Sunday,14
+78,Water Bottle,Water Bottle small near Lab 2,Chitra,CIVIL,9544751542,chitra62@gmail.com,371333,Corridor,4/12/2024,12:19 PM,lost,Clothing,medium,0,Wednesday,14
+79,Laptop Charger,Laptop Charger new near Lab 1,Yamini,AI&DS,9256998853,yamini42@gmail.com,246272,Parking Area,21/10/2024,10:03 AM,found,Electronics,low,0,Wednesday,23
+80,Watch,Watch blue found Lab 1,Nisha,CIVIL,9469709578,nisha10@gmail.com,435299,Auditorium,14/5/2024,12:26 PM,lost,Stationery,low,1,Sunday,17
+81,Calculator,Calculator large found Lab 1,Arun,MECH,9324968938,arun9@gmail.com,711207,Block B,9/7/2024,06:44 AM,lost,Clothing,medium,1,Monday,7
+82,Laptop Charger,Laptop Charger old near Parking Area,Umesh,ECE,9838896089,umesh31@gmail.com,995599,Block B,25/9/2024,10:09 AM,found,Misc,medium,0,Wednesday,10
+83,Mobile Phone,Mobile Phone red lost Corridor,Omkar,CIVIL,9462112307,omkar93@gmail.com,593364,Lab 1,21/3/2024,07:12 AM,lost,Accessories,medium,0,Thursday,2
+84,Wallet,Wallet old beside Block A,Manoj,MECH,9838755881,manoj66@gmail.com,762634,Parking Area,19/8/2024,12:16 PM,found,Accessories,low,1,Monday,6
+85,Notebook,Notebook red near Auditorium,Varun,AI&DS,9913278279,varun57@gmail.com,888633,Block A,14/9/2024,02:36 AM,lost,Misc,low,0,Saturday,18
+86,Wallet,Wallet new found Block B,Isha,ECE,9648068643,isha97@gmail.com,831074,Library,28/7/2024,03:22 AM,found,Electronics,high,1,Wednesday,10
+87,Laptop Charger,Laptop Charger black found Corridor,Lavanya,AI&DS,9668908259,lavanya31@gmail.com,189693,Ground Floor,25/1/2024,01:56 AM,found,Clothing,low,0,Tuesday,5
+88,ID Card,ID Card small beside Block B,Quentin,EEE,9816978143,quentin39@gmail.com,742119,Library,10/8/2024,10:52 PM,found,Clothing,low,1,Sunday,16
+89,Headphones,Headphones old found Canteen,Sneha,ECE,9258655160,sneha95@gmail.com,932313,Corridor,2/9/2024,07:11 PM,found,Clothing,medium,0,Wednesday,14
+90,Mobile Phone,Mobile Phone old found Block B,Manoj,CSE,9719140778,manoj22@gmail.com,992378,Corridor,18/8/2024,03:33 PM,found,Clothing,high,0,Thursday,6
+91,Headphones,Headphones blue found Library,Chitra,CIVIL,9694970187,chitra38@gmail.com,506265,Library,4/8/2024,03:47 PM,lost,Misc,low,0,Tuesday,22
+92,Laptop Charger,Laptop Charger large lost Lab 1,Manoj,CIVIL,9969667808,manoj37@gmail.com,920919,Auditorium,10/10/2024,02:40 AM,found,Accessories,medium,0,Sunday,21
+93,Water Bottle,Water Bottle black lost Canteen,Bharath,IT,9542433848,bharath31@gmail.com,905939,Parking Area,14/3/2024,03:33 PM,found,Stationery,medium,0,Wednesday,0
+94,Bag,Bag small beside Block A,Rohit,ECE,9717334105,rohit46@gmail.com,179642,Canteen,21/1/2024,09:19 PM,lost,Electronics,medium,1,Saturday,1
+95,Mobile Phone,Mobile Phone blue beside Library,Yamini,EEE,9549724964,yamini76@gmail.com,118441,Canteen,15/5/2024,10:42 PM,lost,Misc,high,0,Sunday,23
+96,ID Card,ID Card red near Canteen,Manoj,CSE,9547120248,manoj50@gmail.com,756918,Auditorium,18/9/2024,05:20 PM,lost,Accessories,low,1,Wednesday,1
+97,Laptop Charger,Laptop Charger blue found Lab 1,Farooq,AI&DS,9309424913,farooq45@gmail.com,379001,Ground Floor,28/1/2024,08:04 AM,lost,Clothing,low,1,Monday,5
+98,Mobile Phone,Mobile Phone red lost Parking Area,Harish,IT,9577285302,harish13@gmail.com,364850,Lab 1,11/4/2024,04:42 AM,lost,Clothing,low,1,Thursday,18
+99,Bag,Bag red near Canteen,Zaheer,ECE,9704416542,zaheer71@gmail.com,828760,Block A,10/10/2024,03:10 AM,lost,Misc,high,0,Wednesday,20
+100,Mobile Phone,Mobile Phone large near Block A,Farooq,CSE,9572969759,farooq51@gmail.com,674140,Library,4/3/2024,07:38 PM,lost,Stationery,low,1,Sunday,1
+101,Water Bottle,Water Bottle old found Ground Floor,Priya,MECH,9744398602,priya9@gmail.com,342938,Lab 2,10/4/2024,01:15 AM,found,Electronics,high,0,Thursday,8
+102,Headphones,Headphones new found Block B,Tara,AI&DS,9347340513,tara65@gmail.com,395399,Ground Floor,2/11/2024,04:30 PM,found,Stationery,low,1,Tuesday,23
+103,Bag,Bag old lost Block B,Rohit,ECE,9128239915,rohit67@gmail.com,530846,Ground Floor,27/2/2024,05:35 PM,lost,Accessories,high,0,Friday,10
+104,Bag,Bag black near Lab 1,Arun,CIVIL,9632122295,arun85@gmail.com,210947,Corridor,19/1/2024,06:07 AM,lost,Clothing,medium,0,Monday,1
+105,Mobile Phone,Mobile Phone small near Ground Floor,Tara,EEE,9605217311,tara74@gmail.com,824432,Block B,19/2/2024,12:04 PM,lost,Clothing,medium,0,Monday,6
+106,Laptop Charger,Laptop Charger red beside Lab 1,Wamiqa,MECH,9641299975,wamiqa89@gmail.com,390498,Lab 1,13/6/2024,11:59 PM,lost,Clothing,medium,1,Friday,12
+107,Headphones,Headphones black beside Block A,Manoj,ECE,9522794492,manoj49@gmail.com,865052,Library,25/5/2024,08:16 AM,lost,Electronics,high,0,Friday,0
+108,Headphones,Headphones large found Lab 1,Gayathri,MECH,9265195687,gayathri46@gmail.com,981007,Block A,26/9/2024,11:37 PM,lost,Stationery,low,0,Sunday,11
+109,Headphones,Headphones black found Parking Area,Divya,AI&DS,9931242687,divya91@gmail.com,444571,Auditorium,15/6/2024,03:44 PM,found,Misc,medium,0,Tuesday,21
+110,Wallet,Wallet small found Parking Area,Yamini,IT,9661824408,yamini9@gmail.com,582274,Corridor,5/5/2024,11:35 AM,lost,Stationery,low,1,Thursday,8
+111,Calculator,Calculator new found Lab 2,Farooq,ECE,9112266495,farooq27@gmail.com,754435,Corridor,8/10/2024,06:08 PM,lost,Misc,high,1,Tuesday,5
+112,Notebook,Notebook new beside Block B,Tara,EEE,9856790471,tara4@gmail.com,197509,Canteen,9/10/2024,10:31 PM,found,Stationery,medium,1,Tuesday,21
+113,Watch,Watch new beside Library,Umesh,EEE,9916957641,umesh76@gmail.com,745879,Library,19/7/2024,08:34 AM,found,Stationery,medium,1,Friday,15
+114,Water Bottle,Water Bottle large beside Canteen,Omkar,CIVIL,9133628597,omkar85@gmail.com,310313,Ground Floor,1/6/2024,08:13 PM,lost,Electronics,high,0,Wednesday,3
+115,Watch,Watch red beside Lab 2,Wamiqa,MECH,9398407665,wamiqa28@gmail.com,133236,Auditorium,28/12/2024,03:51 AM,found,Clothing,low,1,Friday,18
+116,Headphones,Headphones red beside Block A,Divya,ECE,9540427574,divya32@gmail.com,423174,Canteen,4/1/2024,05:34 PM,found,Misc,high,1,Thursday,3
+117,Headphones,Headphones red beside Block A,Eshan,AI&DS,9993262165,eshan9@gmail.com,680100,Block A,27/10/2024,02:10 PM,found,Accessories,medium,0,Friday,12
+118,Notebook,Notebook red lost Corridor,Arun,MECH,9701573880,arun43@gmail.com,485781,Block B,15/12/2024,04:03 PM,lost,Clothing,medium,0,Monday,16
+119,Bag,Bag large beside Auditorium,Kavin,CSE,9629408251,kavin16@gmail.com,556347,Lab 2,27/5/2024,05:35 AM,found,Stationery,low,0,Monday,23
+120,Laptop Charger,Laptop Charger black beside Corridor,Yamini,IT,9148464112,yamini20@gmail.com,350024,Canteen,2/12/2024,07:19 AM,found,Misc,medium,0,Friday,13
+121,ID Card,ID Card blue near Ground Floor,Quentin,ECE,9586890502,quentin27@gmail.com,878715,Ground Floor,9/10/2024,12:31 AM,found,Electronics,high,1,Saturday,6
+122,Headphones,Headphones old near Ground Floor,Nisha,IT,9886799387,nisha47@gmail.com,633441,Auditorium,27/9/2024,12:42 AM,found,Electronics,low,1,Tuesday,18
+123,ID Card,ID Card red lost Parking Area,Yamini,MECH,9966063365,yamini64@gmail.com,581915,Canteen,18/6/2024,04:45 PM,lost,Electronics,medium,1,Tuesday,22
+124,Laptop Charger,Laptop Charger black found Corridor,Arun,IT,9951764852,arun8@gmail.com,149011,Ground Floor,4/4/2024,02:26 PM,found,Clothing,medium,0,Thursday,0
+125,Wallet,Wallet blue beside Lab 2,Omkar,MECH,9889180825,omkar89@gmail.com,591481,Canteen,15/7/2024,04:47 PM,lost,Clothing,medium,0,Saturday,14
+126,Calculator,Calculator old lost Ground Floor,Farooq,ECE,9649456052,farooq71@gmail.com,759632,Canteen,16/12/2024,07:29 PM,lost,Accessories,medium,0,Tuesday,23
+127,Laptop Charger,Laptop Charger blue lost Parking Area,Lavanya,MECH,9349252587,lavanya74@gmail.com,169987,Corridor,17/5/2024,07:17 PM,lost,Stationery,medium,0,Sunday,9
+128,Watch,Watch large found Library,Manoj,MECH,9319219853,manoj56@gmail.com,750488,Library,13/12/2024,02:20 PM,lost,Accessories,medium,0,Tuesday,8
+129,Calculator,Calculator new beside Block B,Arun,CSE,9245026082,arun20@gmail.com,931482,Library,27/12/2024,07:24 PM,found,Clothing,medium,1,Saturday,0
+130,Water Bottle,Water Bottle old found Ground Floor,Kavin,ECE,9773461502,kavin84@gmail.com,219453,Parking Area,19/5/2024,04:21 AM,lost,Misc,high,1,Monday,14
+131,Mobile Phone,Mobile Phone red lost Block B,Rohit,AI&DS,9134383585,rohit43@gmail.com,575093,Block B,6/2/2024,04:24 PM,found,Stationery,medium,1,Sunday,11
+132,Headphones,Headphones black near Canteen,Eshan,CSE,9572948337,eshan2@gmail.com,870780,Corridor,22/6/2024,08:00 PM,lost,Misc,medium,0,Friday,12
+133,Watch,Watch new near Ground Floor,Rohit,CSE,9236050996,rohit99@gmail.com,300227,Corridor,22/10/2024,10:53 PM,lost,Stationery,high,1,Friday,4
+134,Water Bottle,Water Bottle red beside Library,Manoj,CSE,9511109628,manoj83@gmail.com,296174,Corridor,22/6/2024,02:23 AM,found,Misc,medium,1,Monday,18
+135,Watch,Watch large near Lab 2,Gayathri,EEE,9333946432,gayathri9@gmail.com,975677,Block A,15/4/2024,05:48 PM,found,Misc,high,0,Saturday,2
+136,Watch,Watch small found Canteen,Tara,ECE,9388669497,tara54@gmail.com,900372,Canteen,13/5/2024,11:24 AM,found,Accessories,high,1,Sunday,10
+137,ID Card,ID Card new found Block A,Harish,CIVIL,9824934479,harish34@gmail.com,911367,Auditorium,2/12/2024,11:32 AM,lost,Electronics,medium,0,Tuesday,18
+138,Watch,Watch black near Library,Yamini,CIVIL,9696524221,yamini77@gmail.com,790273,Ground Floor,8/8/2024,05:35 AM,lost,Clothing,high,0,Thursday,19
+139,Mobile Phone,Mobile Phone old lost Lab 1,Harish,CIVIL,9119453341,harish42@gmail.com,640000,Lab 1,26/10/2024,10:55 AM,found,Misc,low,0,Wednesday,0
+140,Water Bottle,Water Bottle red lost Corridor,Gayathri,CSE,9693635546,gayathri95@gmail.com,217761,Library,11/7/2024,12:14 PM,found,Misc,high,0,Saturday,5
+141,Water Bottle,Water Bottle black lost Parking Area,Divya,MECH,9545432281,divya73@gmail.com,418201,Parking Area,1/3/2024,11:04 AM,found,Clothing,medium,1,Sunday,8
+142,Notebook,Notebook black found Corridor,Eshan,AI&DS,9662302947,eshan25@gmail.com,515801,Block A,2/8/2024,05:39 PM,found,Misc,low,0,Thursday,0
+143,ID Card,ID Card black found Block B,Sneha,CSE,9877382330,sneha34@gmail.com,881280,Parking Area,12/7/2024,11:22 PM,lost,Clothing,medium,1,Thursday,16
+144,Wallet,Wallet blue lost Ground Floor,Umesh,AI&DS,9769608693,umesh45@gmail.com,990623,Library,10/4/2024,09:36 PM,found,Electronics,medium,1,Wednesday,1
+145,Headphones,Headphones blue near Block B,Quentin,CIVIL,9239783528,quentin99@gmail.com,233251,Block B,1/8/2024,03:17 PM,found,Stationery,low,0,Thursday,3
+146,Calculator,Calculator red near Auditorium,Gayathri,EEE,9444236140,gayathri70@gmail.com,516138,Canteen,17/12/2024,01:44 PM,lost,Misc,low,1,Monday,16
+147,Bag,Bag red near Block A,Harish,MECH,9786192401,harish61@gmail.com,639972,Lab 1,12/10/2024,09:59 AM,lost,Electronics,medium,1,Wednesday,12
+148,Water Bottle,Water Bottle blue near Lab 2,Tara,IT,9969983572,tara19@gmail.com,580755,Parking Area,23/3/2024,03:15 PM,lost,Electronics,low,1,Wednesday,7
+149,Wallet,Wallet large found Lab 2,Isha,MECH,9752122739,isha91@gmail.com,889151,Corridor,11/11/2024,08:53 AM,lost,Accessories,high,0,Monday,14
+150,Wallet,Wallet old lost Parking Area,Priya,ECE,9705620883,priya38@gmail.com,480480,Library,5/12/2024,07:42 PM,found,Clothing,low,1,Saturday,6
+151,Wallet,Wallet new near Block B,Isha,AI&DS,9178623077,isha4@gmail.com,879075,Block B,6/4/2024,12:44 AM,found,Clothing,medium,0,Thursday,13
+152,Watch,Watch old near Auditorium,Umesh,IT,9793529453,umesh82@gmail.com,242337,Library,23/2/2024,02:42 AM,found,Electronics,high,0,Friday,8
+153,Watch,Watch new found Parking Area,Harish,CSE,9950785097,harish11@gmail.com,773616,Lab 1,15/8/2024,12:30 PM,lost,Accessories,high,1,Tuesday,4
+154,Water Bottle,Water Bottle large found Lab 2,Kavin,ECE,9243808855,kavin34@gmail.com,234373,Corridor,25/8/2024,08:28 AM,found,Clothing,medium,1,Thursday,21
+155,Mobile Phone,Mobile Phone blue lost Lab 1,Kavin,AI&DS,9469662400,kavin24@gmail.com,197763,Canteen,10/9/2024,05:27 AM,lost,Clothing,low,0,Friday,12
+156,Notebook,Notebook small near Block A,Wamiqa,CIVIL,9941567475,wamiqa3@gmail.com,894946,Ground Floor,15/6/2024,12:40 AM,found,Misc,high,1,Thursday,15
+157,Headphones,Headphones large found Lab 2,Bharath,ECE,9665029277,bharath44@gmail.com,353070,Block A,21/11/2024,01:09 PM,found,Clothing,low,1,Saturday,21
+158,Watch,Watch large near Parking Area,Wamiqa,MECH,9577928438,wamiqa83@gmail.com,574224,Lab 1,22/2/2024,09:48 PM,lost,Clothing,high,0,Sunday,7
+159,Bag,Bag large near Corridor,Sneha,CIVIL,9728971435,sneha18@gmail.com,838473,Canteen,4/12/2024,09:21 PM,lost,Accessories,high,1,Saturday,1
+160,Calculator,Calculator red beside Block B,Chitra,IT,9623358636,chitra74@gmail.com,543044,Block A,13/11/2024,04:32 PM,found,Stationery,high,1,Saturday,14
+161,Wallet,Wallet old beside Lab 1,Sneha,MECH,9778242755,sneha20@gmail.com,949441,Block A,1/1/2024,09:45 AM,lost,Electronics,low,1,Tuesday,16
+162,Headphones,Headphones large lost Parking Area,Nisha,ECE,9443314785,nisha11@gmail.com,437443,Auditorium,11/10/2024,06:06 PM,lost,Misc,high,1,Thursday,3
+163,Mobile Phone,Mobile Phone old lost Library,Umesh,MECH,9384723140,umesh81@gmail.com,470186,Lab 1,23/8/2024,03:17 AM,lost,Clothing,high,1,Saturday,22
+164,Headphones,Headphones small near Block A,Sneha,AI&DS,9419342628,sneha67@gmail.com,308011,Library,12/2/2024,08:07 PM,lost,Stationery,low,0,Saturday,6
+165,Water Bottle,Water Bottle new found Corridor,Isha,ECE,9563877313,isha60@gmail.com,491264,Auditorium,22/8/2024,08:28 AM,found,Accessories,medium,1,Friday,15
+166,Mobile Phone,Mobile Phone blue lost Library,Kavin,EEE,9861131956,kavin83@gmail.com,718962,Auditorium,20/2/2024,05:00 PM,found,Electronics,high,0,Sunday,16
+167,Headphones,Headphones black lost Auditorium,Arun,CIVIL,9383683067,arun51@gmail.com,512128,Parking Area,20/8/2024,11:17 PM,lost,Electronics,medium,0,Sunday,5
+168,Water Bottle,Water Bottle red beside Parking Area,Jothi,AI&DS,9804840173,jothi32@gmail.com,920651,Library,7/3/2024,06:48 AM,found,Misc,medium,0,Wednesday,10
+169,Watch,Watch old beside Auditorium,Rohit,ECE,9443786281,rohit94@gmail.com,111031,Auditorium,18/2/2024,12:03 PM,lost,Misc,high,0,Saturday,19
+170,Watch,Watch new beside Ground Floor,Jothi,MECH,9545816376,jothi96@gmail.com,811384,Canteen,6/11/2024,07:05 PM,lost,Clothing,high,0,Monday,18
+171,ID Card,ID Card new beside Corridor,Manoj,IT,9849510165,manoj39@gmail.com,368085,Block B,19/1/2024,10:20 AM,found,Clothing,medium,0,Monday,1
+172,Headphones,Headphones blue beside Block A,Umesh,MECH,9226830627,umesh7@gmail.com,476127,Canteen,13/5/2024,01:28 PM,lost,Stationery,high,0,Monday,6
+173,Bag,Bag new found Auditorium,Yamini,MECH,9778381516,yamini86@gmail.com,761649,Block B,20/7/2024,06:59 AM,found,Accessories,high,1,Friday,23
+174,Headphones,Headphones small beside Auditorium,Rohit,MECH,9165701369,rohit43@gmail.com,478055,Ground Floor,17/10/2024,10:45 AM,found,Electronics,low,1,Friday,19
+175,Bag,Bag red found Auditorium,Divya,CSE,9153285495,divya85@gmail.com,233475,Lab 2,8/4/2024,12:52 AM,lost,Accessories,medium,0,Thursday,8
+176,Mobile Phone,Mobile Phone blue lost Block B,Nisha,IT,9913729492,nisha70@gmail.com,985319,Lab 1,10/2/2024,06:31 PM,lost,Accessories,high,0,Friday,8
+177,Bag,Bag black near Parking Area,Farooq,CIVIL,9191239548,farooq61@gmail.com,556899,Corridor,11/9/2024,10:10 AM,lost,Stationery,medium,0,Saturday,17
+178,Notebook,Notebook small lost Parking Area,Kavin,ECE,9106165459,kavin86@gmail.com,258713,Block A,18/12/2024,03:38 AM,lost,Stationery,low,1,Friday,19
+179,Wallet,Wallet red found Corridor,Priya,CIVIL,9742770629,priya84@gmail.com,529854,Ground Floor,16/3/2024,07:33 PM,found,Stationery,medium,1,Saturday,11
+180,Mobile Phone,Mobile Phone small found Lab 1,Kavin,ECE,9210282288,kavin98@gmail.com,110284,Canteen,18/6/2024,12:43 AM,lost,Misc,medium,1,Thursday,23
+181,Bag,Bag new lost Corridor,Jothi,AI&DS,9219308193,jothi84@gmail.com,112559,Corridor,17/1/2024,02:00 PM,found,Misc,medium,1,Wednesday,15
+182,Wallet,Wallet large found Auditorium,Nisha,AI&DS,9971147221,nisha99@gmail.com,865327,Lab 1,14/7/2024,04:53 PM,found,Clothing,medium,0,Tuesday,7
+183,Watch,Watch small near Lab 2,Jothi,IT,9345748180,jothi26@gmail.com,602804,Lab 2,28/3/2024,03:50 PM,lost,Misc,low,0,Wednesday,0
+184,Water Bottle,Water Bottle small near Block B,Farooq,AI&DS,9785924651,farooq64@gmail.com,356768,Ground Floor,11/1/2024,06:10 AM,found,Electronics,medium,0,Wednesday,15
+185,Headphones,Headphones black beside Lab 2,Eshan,IT,9275927764,eshan77@gmail.com,179728,Ground Floor,12/10/2024,08:28 AM,found,Clothing,low,1,Friday,3
+186,Notebook,Notebook black beside Ground Floor,Tara,IT,9873841689,tara30@gmail.com,507756,Parking Area,12/4/2024,10:28 PM,found,Stationery,high,1,Saturday,11
+187,Wallet,Wallet blue lost Lab 2,Omkar,AI&DS,9371834168,omkar34@gmail.com,376767,Lab 2,13/2/2024,07:15 PM,lost,Stationery,medium,1,Thursday,15
+188,Laptop Charger,Laptop Charger blue beside Block A,Priya,CSE,9252045307,priya29@gmail.com,632245,Ground Floor,17/8/2024,08:23 PM,lost,Misc,low,1,Wednesday,11
+189,Calculator,Calculator new found Block A,Priya,MECH,9301218251,priya77@gmail.com,142457,Library,2/6/2024,10:00 PM,found,Stationery,high,0,Thursday,7
+190,Bag,Bag large near Ground Floor,Manoj,CSE,9446302900,manoj94@gmail.com,694831,Canteen,19/4/2024,05:19 AM,found,Clothing,low,1,Monday,4
+191,Calculator,Calculator blue found Library,Gayathri,CIVIL,9919267773,gayathri53@gmail.com,452567,Block B,7/6/2024,04:56 PM,found,Stationery,high,0,Friday,12
+192,Notebook,Notebook blue lost Lab 2,Farooq,IT,9100100093,farooq68@gmail.com,613893,Lab 1,16/11/2024,06:40 PM,lost,Clothing,low,1,Sunday,13
+193,Mobile Phone,Mobile Phone large beside Auditorium,Harish,ECE,9723891617,harish83@gmail.com,952444,Lab 1,24/4/2024,07:54 PM,found,Electronics,high,1,Saturday,18
+194,Notebook,Notebook new near Corridor,Priya,CSE,9949290293,priya97@gmail.com,157932,Ground Floor,9/6/2024,11:02 PM,lost,Misc,medium,0,Friday,23
+195,Mobile Phone,Mobile Phone old lost Library,Zaheer,IT,9757295268,zaheer30@gmail.com,845191,Block A,23/3/2024,07:22 AM,found,Misc,low,1,Wednesday,12
+196,Mobile Phone,Mobile Phone red near Canteen,Harish,MECH,9477128988,harish55@gmail.com,624157,Canteen,3/8/2024,08:20 AM,found,Accessories,medium,1,Friday,2
+197,Calculator,Calculator new beside Library,Wamiqa,AI&DS,9820756025,wamiqa65@gmail.com,418933,Library,16/6/2024,12:20 AM,lost,Stationery,low,1,Wednesday,19
+198,Watch,Watch blue beside Lab 1,Umesh,ECE,9764875604,umesh48@gmail.com,134851,Auditorium,24/12/2024,01:22 AM,lost,Electronics,medium,1,Thursday,5
+199,ID Card,ID Card large lost Corridor,Chitra,IT,9687883763,chitra32@gmail.com,679643,Auditorium,26/1/2024,03:30 PM,lost,Clothing,high,0,Monday,9
+200,Calculator,Calculator blue near Canteen,Yamini,ECE,9608023580,yamini14@gmail.com,602732,Block B,1/7/2024,12:12 AM,found,Misc,low,0,Thursday,17
+201,Notebook,Notebook blue beside Lab 1,Isha,CSE,9554605941,isha57@gmail.com,269746,Block B,18/7/2024,07:21 PM,lost,Clothing,medium,1,Wednesday,11
+202,Bag,Bag small found Corridor,Sneha,EEE,9207893320,sneha1@gmail.com,433920,Auditorium,16/11/2024,03:22 AM,found,Electronics,low,1,Saturday,23
+203,Calculator,Calculator old lost Library,Rohit,MECH,9680442857,rohit41@gmail.com,945072,Corridor,17/8/2024,03:13 PM,found,Misc,medium,1,Sunday,15
+204,ID Card,ID Card black lost Block A,Umesh,EEE,9222558414,umesh3@gmail.com,931490,Ground Floor,3/6/2024,01:50 PM,found,Misc,low,0,Thursday,12
+205,Notebook,Notebook old lost Parking Area,Arun,CIVIL,9830715187,arun15@gmail.com,190167,Corridor,21/6/2024,11:24 PM,lost,Accessories,high,1,Monday,22
+206,Watch,Watch old near Library,Isha,CSE,9144486468,isha40@gmail.com,452022,Lab 1,10/1/2024,11:35 AM,lost,Clothing,low,1,Sunday,18
+207,Mobile Phone,Mobile Phone old beside Ground Floor,Tara,AI&DS,9947861925,tara40@gmail.com,754117,Block B,11/7/2024,11:22 AM,lost,Clothing,low,0,Thursday,9
+208,ID Card,ID Card new found Ground Floor,Priya,EEE,9449188837,priya99@gmail.com,634760,Canteen,16/1/2024,09:46 AM,lost,Stationery,low,1,Sunday,20
+209,ID Card,ID Card red near Lab 2,Varun,MECH,9990992874,varun91@gmail.com,526740,Parking Area,23/4/2024,11:38 AM,lost,Electronics,medium,1,Tuesday,18
+210,Notebook,Notebook black near Lab 1,Wamiqa,CIVIL,9916692708,wamiqa70@gmail.com,937846,Parking Area,16/11/2024,03:53 PM,lost,Stationery,low,1,Monday,23
+211,Mobile Phone,Mobile Phone large beside Block B,Omkar,CSE,9634526283,omkar2@gmail.com,718645,Lab 1,4/7/2024,07:34 AM,lost,Electronics,low,1,Thursday,19
+212,ID Card,ID Card large lost Corridor,Divya,CSE,9208606732,divya49@gmail.com,364642,Corridor,9/7/2024,07:09 PM,found,Accessories,low,0,Sunday,11
+213,Headphones,Headphones black found Auditorium,Harish,IT,9737269999,harish65@gmail.com,574405,Parking Area,6/3/2024,10:22 PM,found,Clothing,medium,1,Monday,17
+214,Calculator,Calculator old beside Canteen,Bharath,IT,9348614327,bharath84@gmail.com,331180,Canteen,25/6/2024,08:06 PM,lost,Stationery,low,1,Sunday,2
+215,Laptop Charger,Laptop Charger small lost Parking Area,Isha,EEE,9139612345,isha34@gmail.com,375243,Canteen,12/3/2024,07:16 PM,found,Misc,high,0,Friday,13
+216,Calculator,Calculator red near Ground Floor,Yamini,CSE,9808518921,yamini87@gmail.com,980048,Lab 2,26/2/2024,04:59 PM,lost,Stationery,high,1,Sunday,13
+217,Mobile Phone,Mobile Phone large found Lab 1,Eshan,CIVIL,9306515732,eshan57@gmail.com,358505,Lab 2,13/6/2024,12:10 PM,lost,Clothing,high,1,Monday,22
+218,Laptop Charger,Laptop Charger old lost Ground Floor,Priya,IT,9380815214,priya98@gmail.com,383388,Library,26/3/2024,07:44 AM,lost,Stationery,low,1,Tuesday,10
+219,Bag,Bag small lost Lab 1,Lavanya,ECE,9253951353,lavanya56@gmail.com,854840,Block A,27/2/2024,04:34 PM,lost,Stationery,medium,0,Sunday,0
+220,Bag,Bag red found Corridor,Sneha,CIVIL,9251787497,sneha62@gmail.com,455748,Library,12/7/2024,09:32 AM,found,Misc,low,0,Thursday,5
+221,Wallet,Wallet blue beside Block B,Priya,ECE,9429480946,priya5@gmail.com,825893,Block A,22/10/2024,04:31 AM,lost,Accessories,medium,1,Tuesday,14
+222,Water Bottle,Water Bottle blue beside Block A,Harish,IT,9580130946,harish93@gmail.com,550410,Auditorium,10/7/2024,10:21 AM,found,Clothing,high,1,Saturday,22
+223,Laptop Charger,Laptop Charger large found Lab 2,Omkar,EEE,9388284972,omkar78@gmail.com,740234,Block B,26/2/2024,04:26 PM,found,Clothing,low,1,Thursday,16
+224,Calculator,Calculator black near Block B,Isha,IT,9797003639,isha55@gmail.com,560471,Lab 1,7/3/2024,01:12 AM,found,Electronics,high,0,Sunday,3
+225,Watch,Watch large lost Corridor,Priya,ECE,9424707105,priya6@gmail.com,317445,Lab 1,22/9/2024,04:12 AM,lost,Stationery,high,0,Friday,0
+226,Headphones,Headphones small near Lab 1,Divya,CIVIL,9112167074,divya21@gmail.com,361652,Parking Area,5/9/2024,01:55 AM,lost,Misc,high,1,Tuesday,2
+227,Bag,Bag red found Lab 2,Divya,IT,9684306106,divya13@gmail.com,476941,Auditorium,8/5/2024,02:55 PM,lost,Electronics,high,1,Sunday,13
+228,Notebook,Notebook small found Block B,Arun,MECH,9508081966,arun46@gmail.com,162499,Ground Floor,13/1/2024,03:26 AM,lost,Stationery,medium,0,Tuesday,10
+229,Notebook,Notebook old found Parking Area,Divya,MECH,9206621914,divya32@gmail.com,453737,Library,14/3/2024,02:03 PM,lost,Electronics,medium,1,Sunday,19
+230,Watch,Watch old lost Parking Area,Sneha,ECE,9861386885,sneha79@gmail.com,648880,Canteen,2/10/2024,10:30 PM,lost,Clothing,high,1,Thursday,11
+231,Notebook,Notebook blue beside Lab 1,Bharath,CSE,9919050506,bharath51@gmail.com,684217,Block A,4/5/2024,01:28 AM,found,Accessories,low,1,Monday,8
+232,Water Bottle,Water Bottle large lost Block B,Zaheer,AI&DS,9110750082,zaheer78@gmail.com,262585,Library,2/6/2024,12:42 PM,lost,Clothing,low,1,Monday,20
+233,Laptop Charger,Laptop Charger small near Lab 1,Farooq,CIVIL,9450433138,farooq84@gmail.com,570688,Lab 2,17/12/2024,09:53 AM,lost,Accessories,low,1,Tuesday,17
+234,Bag,Bag blue found Lab 2,Divya,CIVIL,9987103209,divya27@gmail.com,281320,Block A,19/8/2024,11:43 AM,found,Stationery,low,0,Wednesday,18
+235,Water Bottle,Water Bottle large near Auditorium,Varun,CIVIL,9494952368,varun38@gmail.com,346126,Canteen,17/9/2024,07:50 PM,found,Misc,medium,1,Friday,1
+236,Watch,Watch new found Ground Floor,Bharath,CIVIL,9560102071,bharath28@gmail.com,519203,Parking Area,20/9/2024,04:30 PM,found,Stationery,high,0,Wednesday,10
+237,Water Bottle,Water Bottle large beside Corridor,Rohit,CSE,9114614661,rohit95@gmail.com,624079,Auditorium,2/10/2024,10:03 AM,lost,Clothing,low,0,Saturday,2
+238,Bag,Bag large lost Ground Floor,Harish,ECE,9324925069,harish31@gmail.com,215334,Corridor,22/7/2024,10:26 PM,lost,Electronics,low,0,Wednesday,12
+239,Wallet,Wallet large found Block B,Arun,EEE,9299278581,arun1@gmail.com,990458,Parking Area,6/3/2024,07:03 AM,lost,Clothing,high,1,Tuesday,12
+240,Water Bottle,Water Bottle blue lost Parking Area,Manoj,CSE,9414429175,manoj7@gmail.com,676438,Block A,7/2/2024,01:04 PM,lost,Clothing,low,1,Wednesday,14
+241,Laptop Charger,Laptop Charger black near Canteen,Yamini,AI&DS,9814980699,yamini82@gmail.com,700474,Corridor,1/9/2024,02:38 AM,lost,Stationery,medium,1,Sunday,7
+242,Bag,Bag blue beside Block B,Umesh,EEE,9742205911,umesh48@gmail.com,191255,Auditorium,26/7/2024,04:23 AM,found,Electronics,low,0,Tuesday,22
+243,Notebook,Notebook new beside Auditorium,Farooq,CSE,9158328311,farooq51@gmail.com,534334,Corridor,24/7/2024,01:10 PM,lost,Accessories,medium,1,Thursday,14
+244,Wallet,Wallet old near Lab 2,Jothi,CSE,9494287008,jothi61@gmail.com,189600,Auditorium,11/4/2024,03:08 PM,found,Stationery,low,1,Monday,10
+245,Watch,Watch large lost Parking Area,Quentin,CIVIL,9882431746,quentin71@gmail.com,361383,Canteen,16/2/2024,06:55 AM,lost,Electronics,medium,0,Saturday,8
+246,ID Card,ID Card red near Corridor,Divya,EEE,9547179929,divya57@gmail.com,327366,Canteen,22/4/2024,08:04 PM,found,Electronics,high,0,Saturday,13
+247,Calculator,Calculator red near Corridor,Manoj,MECH,9157450323,manoj70@gmail.com,468976,Auditorium,24/1/2024,04:16 AM,lost,Electronics,medium,1,Monday,14
+248,Headphones,Headphones black found Library,Arun,CSE,9211163125,arun87@gmail.com,231829,Auditorium,7/9/2024,04:54 AM,lost,Clothing,low,0,Tuesday,10
+249,Calculator,Calculator small near Parking Area,Priya,EEE,9113116166,priya4@gmail.com,166743,Lab 2,3/11/2024,11:59 PM,found,Accessories,medium,0,Saturday,14
+250,ID Card,ID Card new near Canteen,Rohit,CSE,9552201825,rohit36@gmail.com,315771,Ground Floor,25/12/2024,03:19 AM,lost,Stationery,medium,1,Wednesday,21
+251,Headphones,Headphones blue near Lab 1,Manoj,ECE,9236289526,manoj30@gmail.com,983906,Library,21/7/2024,05:08 AM,lost,Clothing,high,1,Thursday,1
+252,Notebook,Notebook new near Canteen,Harish,MECH,9853437419,harish44@gmail.com,743177,Block A,8/5/2024,12:27 PM,found,Accessories,low,1,Wednesday,13
+253,Bag,Bag blue found Canteen,Isha,IT,9907521502,isha35@gmail.com,708685,Corridor,1/7/2024,01:49 PM,found,Electronics,low,0,Thursday,20
+254,Water Bottle,Water Bottle old near Parking Area,Divya,MECH,9947993376,divya31@gmail.com,763472,Canteen,25/11/2024,01:31 AM,found,Misc,medium,1,Thursday,23
+255,Mobile Phone,Mobile Phone black found Library,Manoj,EEE,9214329603,manoj90@gmail.com,806404,Corridor,21/5/2024,11:18 PM,found,Clothing,low,0,Wednesday,22
+256,Bag,Bag old beside Block B,Harish,IT,9915030660,harish78@gmail.com,601025,Library,4/11/2024,07:32 PM,lost,Stationery,low,0,Saturday,22
+257,Bag,Bag black near Library,Priya,CIVIL,9705063147,priya28@gmail.com,596782,Library,3/12/2024,02:33 PM,found,Misc,high,1,Wednesday,20
+258,Calculator,Calculator red found Lab 2,Arun,CSE,9451704477,arun93@gmail.com,926112,Corridor,2/10/2024,06:30 AM,lost,Misc,medium,1,Saturday,4
+259,Headphones,Headphones large lost Parking Area,Manoj,ECE,9895653908,manoj78@gmail.com,735021,Block A,10/2/2024,07:40 AM,lost,Misc,medium,1,Monday,22
+260,Headphones,Headphones blue beside Lab 1,Yamini,MECH,9756500937,yamini4@gmail.com,635321,Lab 1,24/12/2024,11:03 PM,lost,Electronics,low,0,Saturday,3
+261,Calculator,Calculator red found Lab 1,Omkar,ECE,9935915390,omkar21@gmail.com,319852,Block B,3/3/2024,06:24 PM,found,Accessories,medium,0,Sunday,22
+262,Water Bottle,Water Bottle large near Parking Area,Wamiqa,CSE,9555930449,wamiqa23@gmail.com,822538,Auditorium,23/2/2024,05:05 AM,found,Accessories,medium,1,Tuesday,4
+263,Bag,Bag old beside Block B,Gayathri,MECH,9626213726,gayathri33@gmail.com,288636,Canteen,22/5/2024,12:09 AM,found,Accessories,low,1,Friday,7
+264,Laptop Charger,Laptop Charger black near Lab 1,Priya,IT,9170336049,priya80@gmail.com,843345,Lab 2,10/3/2024,06:03 PM,lost,Stationery,low,0,Sunday,18
+265,Bag,Bag old beside Auditorium,Lavanya,AI&DS,9959773664,lavanya91@gmail.com,736357,Block B,13/5/2024,11:50 AM,found,Accessories,medium,1,Thursday,4
+266,Notebook,Notebook old lost Parking Area,Harish,MECH,9942753561,harish10@gmail.com,233860,Lab 2,5/2/2024,04:20 AM,lost,Electronics,low,0,Monday,3
+267,Watch,Watch red found Corridor,Arun,CIVIL,9826275523,arun6@gmail.com,286772,Ground Floor,13/10/2024,05:33 PM,lost,Accessories,low,0,Sunday,23
+268,ID Card,ID Card blue found Library,Eshan,AI&DS,9619793966,eshan32@gmail.com,649162,Corridor,23/8/2024,01:49 PM,lost,Misc,low,0,Thursday,0
+269,Bag,Bag large beside Lab 1,Quentin,ECE,9615100741,quentin80@gmail.com,277687,Canteen,8/2/2024,07:52 AM,lost,Clothing,high,0,Friday,0
+270,Calculator,Calculator blue beside Canteen,Tara,EEE,9214578417,tara80@gmail.com,343149,Canteen,15/9/2024,05:17 AM,lost,Accessories,medium,1,Saturday,14
+271,Water Bottle,Water Bottle large lost Canteen,Yamini,ECE,9951445856,yamini27@gmail.com,567022,Library,22/5/2024,10:17 PM,lost,Stationery,medium,1,Wednesday,0
+272,Watch,Watch black lost Corridor,Omkar,ECE,9482334664,omkar42@gmail.com,781586,Lab 1,17/3/2024,04:58 PM,lost,Electronics,high,0,Saturday,17
+273,Calculator,Calculator old found Lab 1,Farooq,EEE,9162232910,farooq18@gmail.com,864579,Lab 1,9/8/2024,08:37 AM,found,Misc,medium,1,Tuesday,14
+274,Bag,Bag small near Canteen,Chitra,EEE,9966359929,chitra31@gmail.com,326874,Library,15/1/2024,07:26 PM,found,Electronics,high,1,Tuesday,7
+275,Wallet,Wallet large lost Parking Area,Chitra,MECH,9200178903,chitra14@gmail.com,718956,Corridor,11/12/2024,04:01 AM,found,Accessories,high,0,Sunday,6
+276,Mobile Phone,Mobile Phone blue beside Auditorium,Isha,AI&DS,9182865042,isha60@gmail.com,108830,Block B,16/10/2024,11:41 AM,lost,Clothing,low,0,Monday,0
+277,Bag,Bag large found Library,Jothi,IT,9254490438,jothi13@gmail.com,510154,Block A,27/5/2024,08:44 PM,lost,Stationery,medium,1,Thursday,7
+278,Bag,Bag new near Library,Eshan,CIVIL,9555910286,eshan43@gmail.com,975013,Block A,19/11/2024,10:01 PM,lost,Clothing,medium,0,Tuesday,0
+279,ID Card,ID Card old lost Lab 2,Omkar,EEE,9611837623,omkar71@gmail.com,952181,Lab 2,1/4/2024,06:44 PM,lost,Misc,low,1,Friday,23
+280,Laptop Charger,Laptop Charger red beside Corridor,Isha,MECH,9579638613,isha96@gmail.com,830881,Lab 1,25/2/2024,12:28 PM,found,Accessories,low,1,Wednesday,1
+281,Bag,Bag black near Corridor,Umesh,IT,9620061921,umesh36@gmail.com,110087,Lab 2,26/3/2024,01:07 PM,found,Stationery,high,0,Monday,0
+282,Water Bottle,Water Bottle red lost Ground Floor,Chitra,CIVIL,9135722497,chitra45@gmail.com,873562,Lab 1,2/7/2024,11:30 AM,lost,Stationery,medium,1,Wednesday,9
+283,Laptop Charger,Laptop Charger black lost Library,Quentin,CSE,9415463372,quentin5@gmail.com,123591,Ground Floor,23/7/2024,05:54 PM,found,Misc,medium,1,Friday,6
+284,Notebook,Notebook new beside Corridor,Jothi,ECE,9487923122,jothi53@gmail.com,119846,Ground Floor,18/10/2024,10:09 PM,found,Clothing,low,1,Thursday,13
+285,Wallet,Wallet blue lost Auditorium,Bharath,AI&DS,9455839798,bharath95@gmail.com,182963,Canteen,17/2/2024,03:42 AM,found,Stationery,low,1,Monday,17
+286,Wallet,Wallet red near Lab 2,Varun,CSE,9431008341,varun31@gmail.com,214136,Corridor,1/8/2024,02:49 PM,found,Electronics,high,1,Saturday,8
+287,Watch,Watch new beside Block B,Priya,CIVIL,9927126811,priya13@gmail.com,756244,Library,23/4/2024,03:44 AM,lost,Misc,medium,1,Thursday,1
+288,Bag,Bag red beside Canteen,Farooq,IT,9647496393,farooq33@gmail.com,406733,Ground Floor,13/10/2024,07:18 PM,lost,Stationery,high,1,Monday,21
+289,Water Bottle,Water Bottle blue lost Canteen,Rohit,CIVIL,9957952792,rohit31@gmail.com,565497,Block A,9/12/2024,11:43 PM,found,Misc,high,0,Sunday,18
+290,Bag,Bag large lost Ground Floor,Omkar,CIVIL,9421410955,omkar68@gmail.com,703197,Ground Floor,1/1/2024,10:42 PM,found,Stationery,high,1,Thursday,7
+291,ID Card,ID Card old near Lab 1,Sneha,MECH,9959584791,sneha65@gmail.com,618344,Lab 1,1/11/2024,08:48 AM,found,Clothing,high,1,Thursday,8
+292,Watch,Watch blue beside Lab 1,Sneha,CSE,9445346557,sneha32@gmail.com,387504,Block A,12/2/2024,10:06 PM,lost,Clothing,low,1,Wednesday,14
+293,Watch,Watch small beside Parking Area,Nisha,CIVIL,9161602476,nisha89@gmail.com,740276,Canteen,19/2/2024,10:12 PM,lost,Clothing,medium,0,Wednesday,18
+294,Calculator,Calculator blue lost Auditorium,Varun,IT,9722094605,varun64@gmail.com,986530,Library,17/6/2024,07:48 PM,found,Misc,low,0,Saturday,11
+295,Headphones,Headphones old found Lab 2,Umesh,MECH,9820381571,umesh54@gmail.com,608493,Library,22/5/2024,05:50 PM,found,Clothing,low,1,Monday,11
+296,Watch,Watch black found Corridor,Omkar,MECH,9119619098,omkar90@gmail.com,189707,Corridor,12/5/2024,05:39 PM,lost,Misc,high,1,Thursday,10
+297,Bag,Bag small found Auditorium,Eshan,EEE,9386814201,eshan96@gmail.com,676270,Ground Floor,12/6/2024,12:21 PM,found,Clothing,low,0,Sunday,10
+298,Laptop Charger,Laptop Charger blue lost Corridor,Wamiqa,CSE,9706978386,wamiqa44@gmail.com,326299,Library,22/8/2024,03:30 PM,lost,Misc,high,0,Thursday,12
+299,Bag,Bag old beside Library,Sneha,MECH,9696273026,sneha75@gmail.com,385949,Block A,24/11/2024,07:52 PM,lost,Accessories,medium,1,Sunday,19
+300,Mobile Phone,Mobile Phone new found Auditorium,Rohit,IT,9831587411,rohit40@gmail.com,377036,Lab 1,6/11/2024,10:52 PM,lost,Stationery,low,0,Thursday,19
