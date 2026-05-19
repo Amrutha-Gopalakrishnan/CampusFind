@@ -16,6 +16,16 @@ import { supabase } from "./supabaseClient";
 import logo from "/logo.png";
 import { getSafeAvatarUrl } from "./utils/avatarManager";
 
+// ============================================
+// ADMIN ACCESS CONTROL (CODE LEVEL)
+// ============================================
+const ADMIN_EMAIL = "amruthagopal16@gmail.com";
+
+const isAdminUser = (user) => {
+  if (!user?.email) return false;
+  return user.email.toLowerCase().trim() === ADMIN_EMAIL;
+};
+
 export default function Sidebar({ active, onNavigate, user, setUser }) {
   const [isOpen, setIsOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
@@ -118,8 +128,17 @@ export default function Sidebar({ active, onNavigate, user, setUser }) {
       label: "Admin Dashboard",
       icon: Shield,
       action: () => onNavigate("admin"),
+      adminOnly: true, // ✅ Mark as admin-only
     },
   ];
+
+  // ✅ Filter menu items based on user role
+  const visibleMenuItems = menuItems.filter(item => {
+    if (item.adminOnly) {
+      return isAdminUser(user);
+    }
+    return true;
+  });
 
   return (
     <>
@@ -195,7 +214,7 @@ export default function Sidebar({ active, onNavigate, user, setUser }) {
 
         {/* Navigation */}
         <nav className="flex-1 p-5 space-y-2">
-          {menuItems.map((item) => {
+          {visibleMenuItems.map((item) => {
             const Icon = item.icon;
             const isActive = active === item.id;
             return (

@@ -16,6 +16,16 @@ import Status from "./Status";
 import NotFound from "./NotFound";
 import { supabase, handleAuthError } from "./supabaseClient";
 
+// ============================================
+// ADMIN ACCESS CONTROL (CODE LEVEL)
+// ============================================
+const ADMIN_EMAIL = "amruthagopal16@gmail.com";
+
+const isAdminUser = (user) => {
+  if (!user?.email) return false;
+  return user.email.toLowerCase().trim() === ADMIN_EMAIL;
+};
+
 // 🔹 Splash Screen Component
 const SplashScreen = ({ onFinish }) => {
   useEffect(() => {
@@ -57,6 +67,16 @@ const SplashScreen = ({ onFinish }) => {
 const PrivateRoute = ({ children, user }) => {
   console.log("PrivateRoute: user =", user);
   return user ? children : <Navigate to="/login" />;
+};
+
+// Admin Route wrapper - restricts access to admin email only
+const AdminRoute = ({ children, user }) => {
+  if (!user) return <Navigate to="/login" />;
+  if (!isAdminUser(user)) {
+    toast.error("Access Denied: Admin privileges required");
+    return <Navigate to="/dashboard" />;
+  }
+  return children;
 };
 
 // Landing Page Component

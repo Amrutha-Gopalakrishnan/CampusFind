@@ -1,23 +1,106 @@
 import React, { useEffect, useState } from "react";
-import { getPastAnalysis } from "../services/api";
-import axios from "axios";
+import { supabase } from "../supabaseClient";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 export default function PastAnalysis() {
   const [pastData, setPastData] = useState(null);
-  const [mlData, setMlData] = useState(null);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const past = await getPastAnalysis();
-        setPastData(past.data);
+        // Fetch real-time data from Supabase
+        const [lostRes, foundRes] = await Promise.allSettled([
+          supabase.from("lost_items").select("*"),
+          supabase.from("found_items").select("*")
+        ]);
 
-        const ml = await axios.get("http://localhost:8000/ml-analysis");
-        setMlData(ml.data);
+        const lostItems = lostRes.status === 'fulfilled' ? (lostRes.value.data || []) : [];
+        const foundItems = foundRes.status === 'fulfilled' ? (foundRes.value.data || []) : [];
+
+        // Process data for analytics
+        const allItems = [...lostItems, ...foundItems];
+        
+        // Calculate status frequency
+        const statusFrequency = {
+          Lost: lostItems.length,
+          Found: foundItems.length
+        };
+
+        // Calculate trend by date
+        const trendByDate = {};
+        const processDateTrend = (items, status) => {
+          items.forEach(item => {
+            const date = new Date(item.created_at).toLocaleDateString();
+            if (!trendByDate[date]) {
+              trendByDate[date] = { Lost: 0, Found: 0 };
+            }
+            trendByDate[date][status]++;
+          });
+        };
+        
+        processDateTrend(lostItems, 'Lost');
+        processDateTrend(foundItems, 'Found');
+
+        // Sort dates
+        const sortedDates = Object.keys(trendByDate).sort((a, b) => 
+          new Date(a) - new Date(b)
+        ).slice(-30); // Last 30 days
+
+        const sortedTrendByDate = {};
+        sortedDates.forEach(date => {
+          sortedTrendByDate[date] = trendByDate[date];
+        });
+
+        // Calculate category and location frequency
+        const categoryFrequency = {};
+        const locationFrequency = {};
+        
+        allItems.forEach(item => {
+          // Category
+          const category = item.category || item.item_category || 'Uncategorized';
+          categoryFrequency[category] = (categoryFrequency[category] || 0) + 1;
+          
+          // Location
+          const location = item.location || item.last_seen_location || 'Unknown';
+          locationFrequency[location] = (locationFrequency[location] || 0) + 1;
+        });
+
+        // Calculate hour and weekday distribution
+        const hourDistribution = {};
+        const weekdayDistribution = {
+          Monday: 0, Tuesday: 0, Wednesday: 0, Thursday: 0, 
+          Friday: 0, Saturday: 0, Sunday: 0
+        };
+        
+        allItems.forEach(item => {
+          const date = new Date(item.created_at);
+          
+          // Hour distribution
+          const hour = date.getHours();
+          const hourKey = `${hour}:00`;
+          hourDistribution[hourKey] = (hourDistribution[hourKey] || 0) + 1;
+          
+          // Weekday distribution
+          const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          const weekday = weekdays[date.getDay()];
+          weekdayDistribution[weekday]++;
+        });
+
+        const processedData = {
+          total_items: allItems.length,
+          total_lost: lostItems.length,
+          total_found: foundItems.length,
+          status_frequency: statusFrequency,
+          trend_by_date: sortedTrendByDate,
+          category_frequency: categoryFrequency,
+          location_frequency: locationFrequency,
+          hour_distribution: hourDistribution,
+          weekday_distribution: weekdayDistribution
+        };
+
+        setPastData(processedData);
 
       } catch (err) {
         console.error("Error loading data:", err);
@@ -119,91 +202,91 @@ export default function PastAnalysis() {
       </div>
 
       {/* ===================== */}
-      {/*     ML ANALYTICS     */}
+      {/*     ADDITIONAL ANALYTICS     */}
       {/* ===================== */}
-      {mlData && (
-        <>
-          <h3 className="text-2xl font-bold mb-4">Machine Learning Dataset Analytics</h3>
+      <h3 className="text-2xl font-bold mb-4">Detailed Analytics</h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Category Pie */}
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Category Distribution</h3>
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={{
-                  chart: { type: "pie", height: 350 },
-                  title: { text: null },
-                  series: [
-                    {
-                      name: "Items",
-                      colorByPoint: true,
-                      data: prepareSeries(mlData.category_frequency),
-                    },
-                  ],
-                }}
-              />
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Category Pie */}
+        <div className="bg-white p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-semibold mb-4">Category Distribution</h3>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={{
+              chart: { type: "pie", height: 350 },
+              title: { text: null },
+              series: [
+                {
+                  name: "Items",
+                  colorByPoint: true,
+                  data: prepareSeries(pastData.category_frequency),
+                },
+              ],
+            }}
+          />
+        </div>
 
-            {/* Location */}
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Location Distribution</h3>
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={{
-                  chart: { type: "column", height: 350 },
-                  xAxis: { categories: Object.keys(mlData.location_frequency) },
-                  series: [
-                    {
-                      name: "Items",
-                      data: Object.values(mlData.location_frequency),
-                      color: "#4ECDC4",
-                    },
-                  ],
-                }}
-              />
-            </div>
+        {/* Location */}
+        <div className="bg-white p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-semibold mb-4">Location Distribution</h3>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={{
+              chart: { type: "column", height: 350 },
+              xAxis: { categories: Object.keys(pastData.location_frequency || {}) },
+              series: [
+                {
+                  name: "Items",
+                  data: Object.values(pastData.location_frequency || {}),
+                  color: "#4ECDC4",
+                },
+              ],
+            }}
+          />
+        </div>
 
-            {/* Hour */}
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Lost Hour Distribution</h3>
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={{
-                  chart: { type: "column", height: 350 },
-                  xAxis: { categories: Object.keys(mlData.hour_distribution) },
-                  series: [
-                    {
-                      name: "Items",
-                      data: Object.values(mlData.hour_distribution),
-                      color: "#FF6B6B",
-                    },
-                  ],
-                }}
-              />
-            </div>
+        {/* Hour */}
+        <div className="bg-white p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-semibold mb-4">Hourly Distribution</h3>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={{
+              chart: { type: "column", height: 350 },
+              xAxis: { categories: Object.keys(pastData.hour_distribution || {}).sort((a, b) => 
+                parseInt(a) - parseInt(b)
+              ) },
+              series: [
+                {
+                  name: "Items",
+                  data: Object.keys(pastData.hour_distribution || {})
+                    .sort((a, b) => parseInt(a) - parseInt(b))
+                    .map(key => pastData.hour_distribution[key]),
+                  color: "#FF6B6B",
+                },
+              ],
+            }}
+          />
+        </div>
 
-            {/* Weekday */}
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Weekday Distribution</h3>
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={{
-                  chart: { type: "column", height: 350 },
-                  xAxis: { categories: Object.keys(mlData.weekday_distribution) },
-                  series: [
-                    {
-                      name: "Items",
-                      data: Object.values(mlData.weekday_distribution),
-                      color: "#FFA500",
-                    },
-                  ],
-                }}
-              />
-            </div>
-          </div>
-        </>
-      )}
+        {/* Weekday */}
+        <div className="bg-white p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-semibold mb-4">Weekday Distribution</h3>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={{
+              chart: { type: "column", height: 350 },
+              xAxis: { categories: Object.keys(pastData.weekday_distribution || {}) },
+              series: [
+                {
+                  name: "Items",
+                  data: Object.values(pastData.weekday_distribution || {}),
+                  color: "#FFA500",
+                },
+              ],
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

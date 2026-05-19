@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ClipboardList, HandHeart, CheckCircle2, ArrowRight, Sparkles, Zap, Shield } from "lucide-react";
+import { ClipboardList, HandHeart, CheckCircle2, ArrowRight, Sparkles, Play } from "lucide-react";
 
 const Work = () => {
   return (
@@ -90,28 +90,80 @@ const Work = () => {
           ))}
         </div>
 
-        {/* Features */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            { icon: <Zap />, title: "Instant Alerts", desc: "Receive immediate notifications when items are reported." },
-            { icon: <Shield />, title: "Secure Platform", desc: "Built with verified access for campus-only users." },
-            { icon: <CheckCircle2 />, title: "Trusted Recovery", desc: "Ensures authentic and safe item claims." },
-          ].map((feature, i) => (
+        {/* Video Preview */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mt-20"
+        >
+          <VideoPreview />
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+const VideoPreview = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoId = "wxTjSGTeexU";
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl group cursor-pointer" onClick={() => setIsPlaying(true)}>
+        {/* Thumbnail Image */}
+        <img
+          src={thumbnailUrl}
+          alt="CampusFind Demo Video"
+          className="w-full h-auto object-cover"
+        />
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-300 flex items-center justify-center">
+          {/* Play Button */}
+          {!isPlaying && (
             <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: i * 0.2 }}
-              className="text-center"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-20 h-20 bg-gradient-to-br from-[#0066FF] to-[#5B8DEF] rounded-full flex items-center justify-center shadow-2xl"
             >
-              <div className="w-16 h-16 bg-gradient-to-br from-[#0066FF] to-[#5B8DEF] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                {React.cloneElement(feature.icon, { className: "w-8 h-8 text-white" })}
-              </div>
-              <h3 className="text-xl font-bold text-[#1C1C1E] mb-2">{feature.title}</h3>
-              <p className="text-gray-600">{feature.desc}</p>
+              <Play className="w-10 h-10 text-white fill-white" />
             </motion.div>
-          ))}
+          )}
+
+          {/* Embedded Video */}
+          {isPlaying && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute inset-0"
+            >
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                title="CampusFind Demo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </motion.div>
+          )}
         </div>
+
+        {/* Close Button (shown when playing) */}
+        {isPlaying && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsPlaying(false);
+            }}
+            className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/70 hover:bg-black rounded-full flex items-center justify-center text-white transition-colors"
+          >
+            ✕
+          </button>
+        )}
       </div>
     </div>
   );

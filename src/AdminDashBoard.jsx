@@ -3,6 +3,18 @@ import { supabase } from "./supabaseClient";
 import { Shield, LogOut, ArrowRight, Eye, Calendar, User, Hash, Building, Phone, Clock, Search, Filter, CheckCircle, AlertCircle, Sparkles, Edit, Trash2, Save, X, ZoomIn, Image as ImageIcon } from "lucide-react";
 import { useAlert, useConfirm, CustomAlert, CustomConfirm } from "./CustomAlert";
 import { deleteItemWithImage } from "./utils/imageDeletion";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
+// ============================================
+// ADMIN ACCESS CONTROL (CODE LEVEL)
+// ============================================
+const ADMIN_EMAIL = "amruthagopal16@gmail.com";
+
+const isAdminUser = (user) => {
+  if (!user?.email) return false;
+  return user.email.toLowerCase().trim() === ADMIN_EMAIL;
+};
 
 const LockIcon = (props) => (
   <svg
@@ -23,8 +35,18 @@ const LockIcon = (props) => (
 );
 
 export default function AdminDashboard({ user, setUser }) {
+  const navigate = useNavigate();
   const { alert, success, error, warning, info, hideAlert } = useAlert();
   const { confirm, showConfirm, hideConfirm } = useConfirm();
+  
+  // ✅ CODE-LEVEL ACCESS GUARD
+  useEffect(() => {
+    if (!isAdminUser(user)) {
+      toast.error("Access Denied: Admin privileges required");
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+  
   const [authUser, setAuthUser] = useState(user || null);
   const [isFaculty, setIsFaculty] = useState(false);
   const [tab, setTab] = useState("lost"); // 'lost' | 'found' | 'cleanup'

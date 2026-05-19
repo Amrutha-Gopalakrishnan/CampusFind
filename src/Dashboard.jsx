@@ -6,6 +6,17 @@ import Status from "./Status";
 import Profile from "./Profile";
 import AdminDashboard from "./AdminDashBoard";
 import AnalyticsDashboard from "./AnalyticsDashboard";
+import { toast } from "react-toastify";
+
+// ============================================
+// ADMIN ACCESS CONTROL (CODE LEVEL)
+// ============================================
+const ADMIN_EMAIL = "amruthagopal16@gmail.com";
+
+const isAdminUser = (user) => {
+  if (!user?.email) return false;
+  return user.email.toLowerCase().trim() === ADMIN_EMAIL;
+};
 
 export default function Dashboard({ user, setUser }) {
   const [active, setActive] = useState("found"); // 'found' | 'lost' | 'status' | 'analytics' | 'profile' | 'admin'
@@ -16,7 +27,17 @@ export default function Dashboard({ user, setUser }) {
     if (active === "status") return <Status user={user} setUser={setUser} />;
     if (active === "analytics") return <AnalyticsDashboard user={user} setUser={setUser} />;
     if (active === "profile") return <Profile user={user} setUser={setUser} />;
-    if (active === "admin") return <AdminDashboard user={user} setUser={setUser} />;
+    
+    // ✅ CODE-LEVEL ADMIN ACCESS GUARD
+    if (active === "admin") {
+      if (!isAdminUser(user)) {
+        toast.error("Access Denied: Admin privileges required");
+        setActive("found"); // Redirect to default view
+        return <ReportFound user={user} setUser={setUser} />;
+      }
+      return <AdminDashboard user={user} setUser={setUser} />;
+    }
+    
     return null;
   };
 
